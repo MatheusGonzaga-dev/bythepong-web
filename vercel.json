@@ -2,17 +2,13 @@
   "version": 2,
   "builds": [
     {
-      "src": "templates/**/*",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "static/**/*",
+      "src": "public/**/*",
       "use": "@vercel/static"
     }
   ],
   "routes": [
-    { "src": "/", "dest": "/templates/index.html" },
-    { "src": "/game", "dest": "/templates/game.html" },
-    { "src": "/static/(.*)", "dest": "/static/$1" }
+    { "src": "/static/(.*)", "dest": "/public/static/$1" },
+    { "src": "/game", "dest": "/public/game.html" },
+    { "src": "/", "dest": "/public/index.html" }
   ]
 }
