@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ByThePong - Jogando</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/game.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="header"><div class="container"><div class="logo"><i class="fas fa-table-tennis"></i><span>ByThePong</span></div><nav class="nav"><a href="/" class="nav-link"><i class="fas fa-home"></i> Início</a></nav></div></header>
+
+  <div class="game-container">
+    <div class="game-info-panel">
+      <div class="game-info">
+        <div class="player-info">
+          <div class="player-card player-human"><i class="fas fa-user"></i><span class="player-name" id="player-name">Jogador</span><span class="player-score" id="player-score">0</span></div>
+          <div class="game-timer"><i class="fas fa-clock"></i><span id="game-timer">02:00</span></div>
+          <div class="player-card player-bot"><i class="fas fa-robot"></i><span class="player-name">Bot</span><span class="player-score" id="bot-score">0</span></div>
+        </div>
+        <div class="game-status">
+          <span class="difficulty-badge" id="difficulty-badge">Normal</span>
+          <div class="game-controls">
+            <button id="start-game-btn" class="btn btn-success"><i class="fas fa-play"></i> Iniciar</button>
+            <button id="pause-game-btn" class="btn btn-warning" style="display:none"><i class="fas fa-pause"></i> Pausar</button>
+            <button id="restart-game-btn" class="btn btn-secondary"><i class="fas fa-redo"></i> Reiniciar</button>
+            <button id="fullscreen-btn" class="btn btn-fullscreen" title="Tela cheia"><i class="fas fa-expand"></i></button>
+            <button id="game-settings-btn" class="btn btn-settings" title="Configurações"><i class="fas fa-sliders-h"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="game-canvas-container">
+      <canvas id="game-canvas" width="800" height="600"></canvas>
+      <div id="game-overlay" class="game-overlay">
+        <div class="overlay-content">
+          <h2 id="overlay-title">Pronto para Jogar?</h2>
+          <p id="overlay-message">Pressione INICIAR ou ESPAÇO para começar</p>
+          <div class="overlay-actions"><button id="overlay-start-btn" class="btn btn-primary"><i class="fas fa-play"></i> Começar</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="game-instructions">
+      <h3><i class="fas fa-gamepad"></i> Controles</h3>
+      <div class="controls-grid">
+        <div class="control-item"><div class="key-display">W</div><span>Mover para Cima</span></div>
+        <div class="control-item"><div class="key-display">S</div><span>Mover para Baixo</span></div>
+        <div class="control-item"><div class="key-display">↑</div><span>Mover para Cima</span></div>
+        <div class="control-item"><div class="key-display">↓</div><span>Mover para Baixo</span></div>
+        <div class="control-item"><div class="key-display">SPACE</div><span>Iniciar/Pausar</span></div>
+        <div class="control-item"><div class="key-display">ESC</div><span>Menu</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="game-over-modal" class="modal"><div class="modal-content game-over-content"><div class="modal-header game-over-header"><h2 id="game-over-title"><i class="fas fa-trophy"></i> Fim de Jogo!</h2></div><div class="modal-body"><div class="final-score"><div class="score-display"><div class="player-final-score"><span class="score-label">Você</span><span class="score-value" id="final-player-score">0</span></div><div class="score-separator">×</div><div class="bot-final-score"><span class="score-label">Bot</span><span class="score-value" id="final-bot-score">0</span></div></div><div class="result-message" id="result-message"></div></div><div class="game-over-actions"><button id="play-again-btn" class="btn btn-primary"><i class="fas fa-redo"></i> Jogar Novamente</button><button id="back-to-menu-btn" class="btn btn-secondary"><i class="fas fa-home"></i> Voltar ao Menu</button><button id="view-ranking-btn" class="btn btn-success"><i class="fas fa-trophy"></i> Ver Ranking</button></div></div></div></div>
+
+  <div id="loading-game-modal" class="modal"><div class="modal-content loading-content"><div class="loading-spinner"><i class="fas fa-table-tennis spinning"></i></div><h3>Preparando o jogo...</h3><p>Configurando raquetes e bola</p></div></div>
+
+  <div id="connection-status" class="connection-status"><i class="fas fa-wifi" id="connection-icon"></i><span id="connection-text">Conectado</span></div>
+
+  <script src="/js/game.js"></script>
+  <script src="/js/ball.js"></script>
+  <script src="/js/paddle.js"></script>
+  <script src="/js/player.js"></script>
+</body>
+</html>
+
