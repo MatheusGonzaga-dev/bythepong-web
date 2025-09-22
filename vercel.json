@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "routes": [
+    { "src": "/", "dest": "/templates/index.html" },
+    { "src": "/game", "dest": "/templates/game.html" },
+    { "src": "/static/(.*)", "dest": "/static/$1" }
+  ]
+}
