@@ -4,9 +4,400 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ByThePong - Menu Principal</title>
-    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary-color: #00a8ff;
+            --secondary-color: #2c2c54;
+            --accent-color: #ff6b6b;
+            --success-color: #2ed573;
+            --warning-color: #ffa502;
+            --danger-color: #ff4757;
+            --bg-primary: #0f0f23;
+            --bg-secondary: #161a2b;
+            --bg-card: #1e1e38;
+            --bg-overlay: rgba(15, 15, 35, 0.95);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b4b4;
+            --text-muted: #6c6c6c;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            --gradient-accent: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+            --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.4);
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+            --font-primary: 'Orbitron', monospace;
+            --font-secondary: 'Roboto', sans-serif;
+        }
+        
+        body {
+            font-family: var(--font-secondary);
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .header {
+            background: var(--bg-card);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-primary);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .nav {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: var(--transition-fast);
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+            background: rgba(0, 168, 255, 0.1);
+        }
+        
+        .main {
+            flex: 1;
+            padding: 2rem 0;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-radius: 16px;
+            margin-bottom: 3rem;
+        }
+        
+        .hero-title {
+            font-family: var(--font-primary);
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .hero-description {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+        
+        .game-setup {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+        
+        .setup-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .setup-card h2 {
+            font-family: var(--font-primary);
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .game-form {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-group label {
+            font-weight: 500;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-group input[type="text"] {
+            padding: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition-fast);
+        }
+        
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.1);
+        }
+        
+        .difficulty-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .difficulty-option {
+            position: relative;
+        }
+        
+        .difficulty-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .difficulty-option label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .difficulty-option input[type="radio"]:checked + label {
+            border-color: var(--primary-color);
+            background: rgba(0, 168, 255, 0.1);
+        }
+        
+        .difficulty-option label:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-start {
+            font-size: 1.2rem;
+            padding: 1.25rem 2.5rem;
+            border-radius: 12px;
+        }
+        
+        .footer {
+            background: var(--bg-card);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        .footer p {
+            color: var(--text-secondary);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-overlay);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-header h3 {
+            font-family: var(--font-primary);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .modal-close:hover {
+            color: var(--danger-color);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: var(--shadow-lg);
+            z-index: 1001;
+            transform: translateX(100%);
+            transition: var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 300px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            border-color: var(--success-color);
+        }
+        
+        .notification.error {
+            border-color: var(--danger-color);
+        }
+        
+        .notification-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .difficulty-selector {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav {
+                gap: 1rem;
+            }
+            
+            .nav-link {
+                padding: 0.5rem;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
 <header class="header">
@@ -14,7 +405,7 @@
     <div class="logo"><i class="fas fa-table-tennis"></i><span>ByThePong</span></div>
     <nav class="nav">
       <a href="/" class="nav-link"><i class="fas fa-home"></i> Início</a>
-      <a href="/game" class="nav-link"><i class="fas fa-gamepad"></i> Jogar</a>
+      <a href="game.html" class="nav-link"><i class="fas fa-gamepad"></i> Jogar</a>
       <a href="#ranking" class="nav-link" onclick="showRanking()"><i class="fas fa-trophy"></i> Ranking</a>
     </nav>
   </div>
@@ -41,10 +432,22 @@
           <div class="form-group">
             <label><i class="fas fa-cog"></i> Nível de Dificuldade</label>
             <div class="difficulty-selector">
-              <label class="difficulty-option"><input type="radio" name="difficulty" value="fácil"> <span>Fácil</span></label>
-              <label class="difficulty-option"><input type="radio" name="difficulty" value="normal" checked> <span>Normal</span></label>
-              <label class="difficulty-option"><input type="radio" name="difficulty" value="difícil"> <span>Difícil</span></label>
-              <label class="difficulty-option"><input type="radio" name="difficulty" value="expert"> <span>Expert</span></label>
+              <div class="difficulty-option">
+                <input type="radio" name="difficulty" value="fácil" id="facil">
+                <label for="facil"><span>🟢 Fácil</span></label>
+              </div>
+              <div class="difficulty-option">
+                <input type="radio" name="difficulty" value="normal" id="normal" checked>
+                <label for="normal"><span>🟡 Normal</span></label>
+              </div>
+              <div class="difficulty-option">
+                <input type="radio" name="difficulty" value="difícil" id="dificil">
+                <label for="dificil"><span>🟠 Difícil</span></label>
+              </div>
+              <div class="difficulty-option">
+                <input type="radio" name="difficulty" value="expert" id="expert">
+                <label for="expert"><span>🔴 Expert</span></label>
+              </div>
             </div>
           </div>
           <button type="submit" class="btn btn-primary btn-start"><i class="fas fa-play"></i> Iniciar Jogo</button>
@@ -54,13 +457,56 @@
   </div>
 </main>
 
-<footer class="footer"><div class="container"><p>&copy; 2024 ByThePong</p></div></footer>
+<footer class="footer"><div class="container"><p>&copy; 2024 ByThePong - Projeto Acadêmico</p></div></footer>
 
-<div id="ranking-modal" class="modal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-trophy"></i> Ranking</h3><button class="modal-close" onclick="closeRanking()">&times;</button></div><div class="modal-body"><div id="ranking-list" class="ranking-list"></div></div></div></div>
-<div id="notification" class="notification"><span class="notification-text"></span><button class="notification-close">&times;</button></div>
+<div id="ranking-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3><i class="fas fa-trophy"></i> Ranking</h3>
+      <button class="modal-close" onclick="closeRanking()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div id="ranking-list" class="ranking-list">
+        <p>Ranking não disponível no modo estático</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-<script src="/js/utils.js"></script>
-<script src="/js/index.js"></script>
+<div id="notification" class="notification">
+  <span class="notification-text"></span>
+  <button class="notification-close">&times;</button>
+</div>
+
+<script>
+// JavaScript básico para formulário
+document.getElementById('game-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const playerName = document.getElementById('player-name').value;
+    const difficulty = document.querySelector('input[name="difficulty"]:checked').value;
+    
+    if (playerName.trim()) {
+        localStorage.setItem('playerName', playerName);
+        localStorage.setItem('difficulty', difficulty);
+        window.location.href = 'game.html';
+    }
+});
+
+function showRanking() {
+    document.getElementById('ranking-modal').style.display = 'flex';
+}
+
+function closeRanking() {
+    document.getElementById('ranking-modal').style.display = 'none';
+}
+
+// Fechar modal clicando fora
+window.onclick = function(event) {
+    const modal = document.getElementById('ranking-modal');
+    if (event.target === modal) {
+        closeRanking();
+    }
+}
+</script>
 </body>
 </html>
-
