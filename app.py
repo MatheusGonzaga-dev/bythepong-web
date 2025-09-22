@@ -4,7 +4,7 @@ Backend web mantendo POO e encapsulamento
 """
 
 from flask import Flask, render_template, request, jsonify, session
-from flask_socketio import SocketIO, emit
+# from flask_socketio import SocketIO, emit
 import uuid
 import json
 from datetime import datetime
@@ -226,10 +226,10 @@ class WebGameManager:
         """Retorna gerenciador de pontuação"""
         return self.__score_manager
 
-# Inicializa Flask e SocketIO
+# Inicializa Flask
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'bythepong_secret_key_2024'
-socketio = SocketIO(app, cors_allowed_origins="*")
+# socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Gerenciador global de jogos
 game_manager = WebGameManager()
@@ -320,36 +320,36 @@ def move_paddle(game_id):
         return jsonify({'error': 'Erro ao mover raquete'}), 400
 
 # WebSocket Events
-@socketio.on('connect')
-def handle_connect():
-    """Usuário conectou"""
-    emit('connected', {'message': 'Conectado ao ByThePong!'})
+# @socketio.on('connect')
+# def handle_connect():
+#     """Usuário conectou"""
+#     emit('connected', {'message': 'Conectado ao ByThePong!'})
 
-@socketio.on('disconnect')
-def handle_disconnect():
-    """Usuário desconectou"""
-    game_id = session.get('game_id')
-    if game_id:
-        game_manager.remove_game_session(game_id)
+# @socketio.on('disconnect')
+# def handle_disconnect():
+#     """Usuário desconectou"""
+#     game_id = session.get('game_id')
+#     if game_id:
+#         game_manager.remove_game_session(game_id)
 
-@socketio.on('join_game')
-def handle_join_game(data):
-    """Usuário entrou no jogo"""
-    game_id = data.get('game_id')
-    if game_id:
-        session['game_id'] = game_id
-        emit('game_joined', {'game_id': game_id})
+# @socketio.on('join_game')
+# def handle_join_game(data):
+#     """Usuário entrou no jogo"""
+#     game_id = data.get('game_id')
+#     if game_id:
+#         session['game_id'] = game_id
+#         emit('game_joined', {'game_id': game_id})
 
-@socketio.on('paddle_move')
-def handle_paddle_move(data):
-    """Movimento da raquete via WebSocket"""
-    game_id = session.get('game_id')
-    direction = data.get('direction')
+# @socketio.on('paddle_move')
+# def handle_paddle_move(data):
+#     """Movimento da raquete via WebSocket"""
+#     game_id = session.get('game_id')
+#     direction = data.get('direction')
     
-    if game_id and game_manager.update_paddle_position(game_id, direction):
-        # Emite estado atualizado para todos os clientes do jogo
-        state = game_manager.get_game_state(game_id)
-        emit('game_update', state, broadcast=True)
+#     if game_id and game_manager.update_paddle_position(game_id, direction):
+#         # Emite estado atualizado para todos os clientes do jogo
+#         state = game_manager.get_game_state(game_id)
+#         emit('game_update', state, broadcast=True)
 
 if __name__ == '__main__':
     # Cria diretório de templates se não existir
@@ -359,5 +359,5 @@ if __name__ == '__main__':
     
     print("🚀 Iniciando ByThePong Web...")
     print("📱 Acesse: http://localhost:5000")
-    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
 
