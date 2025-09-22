@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Logs
+*.log
+
 # Distribution / packaging
 dist/
 build/
@@ -12,6 +15,8 @@ build/
 venv/
 env/
 .env/
+.venv/
+.env*
 
 # IDE specific files
 .idea/
@@ -22,3 +27,20 @@ env/
 # OS specific files
 .DS_Store
 Thumbs.db
+
+# Flask instance
+instance/
+
+# Node
+node_modules/
+
+# Tests / coverage
+.cache/
+.coverage
+htmlcov/
+
+# Local data
+ranking.json
+
+# Backups
+*.bak

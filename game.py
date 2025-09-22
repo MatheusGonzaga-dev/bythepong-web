@@ -12,6 +12,7 @@ from player import Player
 from ball import Ball
 from paddle import Paddle
 from score_manager import ScoreManager
+from responsive_utils import ResponsiveManager
 
 class Game:
     def __init__(self, width: int = None, height: int = None, difficulty: str = "normal"):
@@ -38,6 +39,10 @@ class Game:
         
         pygame.display.set_caption("ByThePong - Jogo Pong em Python")
         
+        # Inicializa o gerenciador de responsividade
+        self.__responsive = ResponsiveManager()
+        self.__responsive.update_screen_size(self.__width, self.__height)
+        
         # Cores
         self.__BLACK = (0, 0, 0)
         self.__WHITE = (255, 255, 255)
@@ -50,12 +55,37 @@ class Game:
         self.__difficulty = difficulty
         self.__difficulty_settings = self.__get_difficulty_settings()
         
-        # Objetos do jogo
+        # Objetos do jogo com dimensões responsivas
         self.__player = Player()
         self.__bot = Player("Bot")
-        self.__ball = Ball(self.__width // 2, self.__height // 2, 10, self.__difficulty_settings["ball_speed"])
-        self.__left_paddle = Paddle(50, self.__height // 2 - 50, 15, 100, 7)  # Velocidade fixa para jogador
-        self.__right_paddle = Paddle(self.__width - 65, self.__height // 2 - 50, 15, 100, self.__difficulty_settings["ai_speed"])
+        
+        # Propriedades responsivas
+        paddle_props = self.__responsive.paddle_props
+        ball_props = self.__responsive.ball_props
+        margins = self.__responsive.margins
+        
+        self.__ball = Ball(
+            self.__width // 2, 
+            self.__height // 2, 
+            ball_props['radius'], 
+            int(self.__difficulty_settings["ball_speed"] * ball_props['speed_multiplier'])
+        )
+        
+        self.__left_paddle = Paddle(
+            margins['paddle_offset'], 
+            self.__height // 2 - paddle_props['height'] // 2, 
+            paddle_props['width'], 
+            paddle_props['height'], 
+            paddle_props['speed']
+        )
+        
+        self.__right_paddle = Paddle(
+            self.__width - margins['paddle_offset'] - paddle_props['width'], 
+            self.__height // 2 - paddle_props['height'] // 2, 
+            paddle_props['width'], 
+            paddle_props['height'], 
+            int(self.__difficulty_settings["ai_speed"] * ball_props['speed_multiplier'])
+        )
         self.__score_manager = ScoreManager()
         
         # Estado do jogo
@@ -65,10 +95,10 @@ class Game:
         self.__game_start_time = 0
         self.__game_duration = 120  # 2 minutos em segundos
         
-        # Fontes
-        self.__font_large = pygame.font.Font(None, 74)
-        self.__font_medium = pygame.font.Font(None, 36)
-        self.__font_small = pygame.font.Font(None, 24)
+        # Fontes responsivas
+        self.__font_large = pygame.font.Font(None, self.__responsive.scale_font_size(74))
+        self.__font_medium = pygame.font.Font(None, self.__responsive.scale_font_size(36))
+        self.__font_small = pygame.font.Font(None, self.__responsive.scale_font_size(24))
         
         # Controle de IA para paddle direito
         self.__ai_difficulty = self.__difficulty_settings["ai_difficulty"]
@@ -145,8 +175,19 @@ class Game:
         self.__player.reset_score()
         self.__bot.reset_score()
         self.__ball.reset(self.__width // 2, self.__height // 2)
-        self.__left_paddle.set_position(50, self.__height // 2 - 50)
-        self.__right_paddle.set_position(self.__width - 65, self.__height // 2 - 50)
+        
+        # Reposiciona paddles com dimensões responsivas
+        paddle_props = self.__responsive.paddle_props
+        margins = self.__responsive.margins
+        
+        self.__left_paddle.set_position(
+            margins['paddle_offset'], 
+            self.__height // 2 - paddle_props['height'] // 2
+        )
+        self.__right_paddle.set_position(
+            self.__width - margins['paddle_offset'] - paddle_props['width'], 
+            self.__height // 2 - paddle_props['height'] // 2
+        )
     
     def stop_game(self):
         """Para o jogo"""
@@ -339,30 +380,41 @@ class Game:
         pygame.draw.circle(self.__screen, self.__WHITE, 
                           (int(self.__ball.x), int(self.__ball.y)), self.__ball.radius)
         
-        # Desenha placar
+        # Desenha placar com posicionamento responsivo
+        margins = self.__responsive.margins
+        score_y = margins['large']
+        
         # Pontuação do jogador (esquerda)
         player_score_text = self.__font_large.render(str(self.__player.score), True, self.__GREEN)
-        self.__screen.blit(player_score_text, (self.__width // 2 - 80, 50))
+        player_score_x = self.__width // 2 - self.__responsive.scale_width(80)
+        self.__screen.blit(player_score_text, (player_score_x, score_y))
         
         # Separador do placar
         separator_text = self.__font_large.render("x", True, self.__WHITE)
-        self.__screen.blit(separator_text, (self.__width // 2 - 15, 50))
+        separator_x = self.__width // 2 - self.__responsive.scale_width(15)
+        self.__screen.blit(separator_text, (separator_x, score_y))
         
         # Pontuação do bot (direita)
         bot_score_text = self.__font_large.render(str(self.__bot.score), True, self.__RED)
-        self.__screen.blit(bot_score_text, (self.__width // 2 + 30, 50))
+        bot_score_x = self.__width // 2 + self.__responsive.scale_width(30)
+        self.__screen.blit(bot_score_text, (bot_score_x, score_y))
+        
+        # Desenha nomes e informações com posicionamento responsivo
+        top_margin = margins['small']
         
         # Desenha nome do jogador
         name_text = self.__font_medium.render(f"Jogador: {self.__player.name}", True, self.__GREEN)
-        self.__screen.blit(name_text, (10, 10))
+        self.__screen.blit(name_text, (margins['small'], top_margin))
         
         # Desenha nome do bot
         bot_name_text = self.__font_medium.render("Bot", True, self.__RED)
-        self.__screen.blit(bot_name_text, (self.__width - 100, 10))
+        bot_name_width = bot_name_text.get_width()
+        self.__screen.blit(bot_name_text, (self.__width - bot_name_width - margins['small'], top_margin))
         
         # Desenha dificuldade atual
         difficulty_text = self.__font_small.render(f"Dificuldade: {self.__difficulty.title()}", True, self.__BLUE)
-        self.__screen.blit(difficulty_text, (10, 50))
+        difficulty_y = top_margin + self.__responsive.scale_height(30)
+        self.__screen.blit(difficulty_text, (margins['small'], difficulty_y))
         
         # Desenha tempo restante
         if self.__game_running:
@@ -372,18 +424,24 @@ class Game:
             minutes = remaining_time // 60
             seconds = remaining_time % 60
             time_text = self.__font_small.render(f"Tempo: {minutes:02d}:{seconds:02d}", True, self.__WHITE)
-            self.__screen.blit(time_text, (self.__width - 120, 50))
+            time_width = time_text.get_width()
+            time_y = difficulty_y
+            self.__screen.blit(time_text, (self.__width - time_width - margins['small'], time_y))
         
-        # Desenha instruções
+        # Desenha instruções com posicionamento responsivo
         if not self.__game_running:
             instructions = [
                 "Pressione ESPAÇO para começar",
                 "Use W/S ou ↑/↓ para mover a raquete",
                 "Pressione ESC para sair"
             ]
+            instruction_spacing = self.__responsive.scale_height(25)
+            instruction_start_y = self.__height - self.__responsive.scale_height(80)
+            
             for i, instruction in enumerate(instructions):
                 text = self.__font_small.render(instruction, True, self.__GRAY)
-                self.__screen.blit(text, (10, self.__height - 80 + i * 25))
+                y_pos = instruction_start_y + i * instruction_spacing
+                self.__screen.blit(text, (margins['small'], y_pos))
     
     def update(self):
         """Atualiza o estado do jogo"""

@@ -7,6 +7,7 @@ import pygame
 import sys
 from typing import Optional, Callable
 from score_manager import ScoreManager
+from responsive_utils import ResponsiveManager
 
 class Menu:
     def __init__(self, width: int = None, height: int = None):
@@ -32,6 +33,10 @@ class Menu:
         
         pygame.display.set_caption("ByThePong - Menu")
         
+        # Inicializa o gerenciador de responsividade
+        self.__responsive = ResponsiveManager()
+        self.__responsive.update_screen_size(self.__width, self.__height)
+        
         # Cores
         self.__BLACK = (0, 0, 0)
         self.__WHITE = (255, 255, 255)
@@ -43,11 +48,11 @@ class Menu:
         self.__DARK_BLUE = (0, 50, 150)
         self.__GOLD = (255, 215, 0)
         
-        # Fontes
-        self.__font_title = pygame.font.Font(None, 72)
-        self.__font_large = pygame.font.Font(None, 48)
-        self.__font_medium = pygame.font.Font(None, 36)
-        self.__font_small = pygame.font.Font(None, 24)
+        # Fontes responsivas
+        self.__font_title = pygame.font.Font(None, self.__responsive.scale_font_size(72))
+        self.__font_large = pygame.font.Font(None, self.__responsive.scale_font_size(48))
+        self.__font_medium = pygame.font.Font(None, self.__responsive.scale_font_size(36))
+        self.__font_small = pygame.font.Font(None, self.__responsive.scale_font_size(24))
         
         # Estado do menu
         self.__current_screen = "main"  # main, name_input, difficulty, ranking
