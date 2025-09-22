@@ -44,3 +44,4 @@ ranking.json
 
 # Backups
 *.bak
+.vercel
