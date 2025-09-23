@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Django
+db.sqlite3
+staticfiles/
+media/
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+
+# Batch files
+*.bat
+
+# Game files (não necessários para web)
+app.py
+game.py
+main.py
+menu.py
+ball.py
+paddle.py
+player.py
+score_manager.py
+responsive_utils.py
+ranking.json
+executar_*.py
+executar_*.bat
+
+# Arquivos de configuração desnecessários
+bythepong_web/settings_production.py
+bythepong_web/settings_vercel.py
+game/views.py
+game/models.py
+game/game_logic.py
+game/simple_game.py
+game/views_simple.py
+game/migrations/
+
+# Build files
+build.sh

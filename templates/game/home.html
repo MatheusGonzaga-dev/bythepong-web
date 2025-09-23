@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ByThePong - Página Inicial</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #161a2b 50%, #2c2c54 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            background: rgba(30, 30, 56, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(0, 168, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 168, 255, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo::before {
+            content: "🏓";
+            font-size: 2rem;
+            filter: drop-shadow(0 0 10px rgba(0, 168, 255, 0.7));
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-links a {
+            color: #b4b4b4;
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 168, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .nav-links a:hover {
+            color: #00a8ff;
+            border-color: rgba(0, 168, 255, 0.5);
+            background: rgba(0, 168, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.3);
+        }
+        
+        .nav-links a:hover::before {
+            left: 100%;
+        }
+        
+        .container {
+            flex: 1;
+            padding: 0;
+            position: relative;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 80%, rgba(0, 168, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(122, 0, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            padding: 6rem 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 30px rgba(0, 168, 255, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 30px rgba(0, 168, 255, 0.5); }
+            to { text-shadow: 0 0 40px rgba(0, 168, 255, 0.8), 0 0 60px rgba(0, 168, 255, 0.3); }
+        }
+        
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: #b4b4b4;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 1.2rem 2.5rem;
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.4);
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(135deg, #0099e6 0%, #6b00e6 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 168, 255, 0.6);
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid rgba(0, 168, 255, 0.5);
+            color: #00a8ff;
+            box-shadow: none;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(0, 168, 255, 0.1);
+            border-color: #00a8ff;
+            color: #00a8ff;
+        }
+        
+        /* Sections */
+        .features-section,
+        .how-to-play-section,
+        .about-section {
+            padding: 4rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 3rem;
+        }
+        
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: rgba(30, 30, 56, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 168, 255, 0.3);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 15px rgba(0, 168, 255, 0.5));
+        }
+        
+        .feature-card h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #e0e0e0;
+        }
+        
+        .feature-card p {
+            color: #b4b4b4;
+            line-height: 1.6;
+        }
+        
+        /* How to Play Section */
+        .how-to-play-section {
+            background: rgba(30, 30, 56, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .instructions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .instruction-card {
+            background: rgba(30, 30, 56, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .instruction-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 45px rgba(0, 168, 255, 0.2);
+        }
+        
+        .instruction-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 15px rgba(0, 168, 255, 0.5));
+        }
+        
+        .instruction-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(0, 168, 255, 0.4);
+        }
+        
+        .instruction-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #e0e0e0;
+            margin-top: 1rem;
+        }
+        
+        .instruction-card p {
+            color: #b4b4b4;
+            line-height: 1.6;
+        }
+        
+        /* About Section */
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .about-text {
+            background: rgba(30, 30, 56, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .about-text p {
+            color: #b4b4b4;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .about-text code {
+            background: rgba(0, 168, 255, 0.1);
+            color: #00a8ff;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+        
+        .tech-tag {
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 168, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .tech-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 168, 255, 0.4);
+        }
+        
+        .footer {
+            background: rgba(30, 30, 56, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(0, 168, 255, 0.3);
+            color: #b4b4b4;
+        }
+        
+        .footer p {
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .nav-links {
+                justify-content: center;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .instructions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .features-section,
+            .how-to-play-section,
+            .about-section {
+                padding: 3rem 1rem;
+            }
+            
+            .hero-section {
+                padding: 4rem 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.8rem;
+            }
+            
+            .nav-links a {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">ByThePong</div>
+            <div class="nav-links">
+                <a href="{% url 'home' %}">🏠 Início</a>
+                <a href="{% url 'index' %}">🎮 Jogar</a>
+                <a href="{% url 'ranking' %}">🏆 Ranking</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">ByThePong</h1>
+                <p class="hero-subtitle">O jogo de Pong moderno e interativo desenvolvido com Django. Teste suas habilidades contra a IA e conquiste o topo do ranking!</p>
+                <div class="hero-buttons">
+                    <a href="{% url 'index' %}" class="btn">🎮 Jogar Agora</a>
+                    <a href="{% url 'ranking' %}" class="btn btn-outline">🏆 Ver Ranking</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features-section">
+            <h2 class="section-title">✨ Características</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>IA Inteligente</h3>
+                    <p>Desafie uma inteligência artificial com diferentes níveis de dificuldade, desde iniciante até expert.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3>Sistema de Ranking</h3>
+                    <p>Acompanhe seu progresso e compare seus resultados com outros jogadores no ranking global.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Tempo Real</h3>
+                    <p>Jogue com atualizações em tempo real usando WebSockets para uma experiência fluida e responsiva.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- How to Play Section -->
+        <div class="how-to-play-section">
+            <h2 class="section-title">🎮 Como Jogar</h2>
+            <div class="instructions-grid">
+                <div class="instruction-card">
+                    <div class="instruction-number">1</div>
+                    <div class="instruction-icon">⚙️</div>
+                    <h3>Configure</h3>
+                    <p>Digite seu nome e escolha o nível de dificuldade (Fácil, Normal, Difícil ou Expert).</p>
+                </div>
+                <div class="instruction-card">
+                    <div class="instruction-number">2</div>
+                    <div class="instruction-icon">⌨️</div>
+                    <h3>Controle</h3>
+                    <p>Use as teclas <strong>W/S</strong> ou <strong>↑/↓</strong> para mover sua raquete.</p>
+                </div>
+                <div class="instruction-card">
+                    <div class="instruction-number">3</div>
+                    <div class="instruction-icon">🎯</div>
+                    <h3>Objetivo</h3>
+                    <p>Seja o primeiro a marcar 3 pontos ou tenha a maior pontuação em 2 minutos!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="about-section">
+            <h2 class="section-title">💻 Sobre o Projeto</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>
+                        <strong>ByThePong</strong> é um projeto acadêmico desenvolvido para demonstrar conceitos de Programação Orientada a Objetos (POO) 
+                        utilizando Django como framework web. O jogo combina elementos clássicos do Pong com tecnologias modernas.
+                    </p>
+                    <p>
+                        Este projeto implementa padrões de design como <code>Strategy</code> para diferentes dificuldades da IA, 
+                        <code>Observer</code> para o sistema de eventos do jogo, e <code>Factory</code> para criação de objetos do jogo.
+                    </p>
+                    <p>
+                        A aplicação web utiliza Django para o backend, incluindo models para persistência de dados, 
+                        views para lógica de negócio, e templates responsivos para a interface do usuário.
+                    </p>
+                    
+                    <div class="tech-stack">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Django</span>
+                        <span class="tech-tag">HTML5</span>
+                        <span class="tech-tag">CSS3</span>
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">SQLite</span>
+                        <span class="tech-tag">Canvas API</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 ByThePong - Projeto Acadêmico de POO com Django</p>
+    </footer>
+
+    <script>
+        // Animação de entrada para os cards
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observar todos os cards
+        document.querySelectorAll('.feature-card, .instruction-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Efeito de parallax suave no scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.container::before');
+            if (parallax) {
+                parallax.style.transform = `translateY(${scrolled * 0.1}px)`;
+            }
+        });
+    </script>
+</body>
+</html>

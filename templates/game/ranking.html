@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ByThePong - Ranking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #161a2b 50%, #2c2c54 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            background: rgba(30, 30, 56, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(0, 168, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 168, 255, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo::before {
+            content: "🏓";
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 10px rgba(0, 168, 255, 0.7));
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-links a {
+            color: #b4b4b4;
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 168, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .nav-links a:hover {
+            color: #00a8ff;
+            border-color: rgba(0, 168, 255, 0.5);
+            background: rgba(0, 168, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.3);
+        }
+        
+        .nav-links a:hover::before {
+            left: 100%;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: none;
+            margin: 0;
+            padding: 3rem 2rem;
+            position: relative;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 80%, rgba(0, 168, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(122, 0, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        .ranking-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 168, 255, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .ranking-title::before {
+            content: "🏆";
+            font-size: 2.5rem;
+            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.7));
+            margin-right: 1rem;
+        }
+        
+        .alert-message {
+            background: rgba(255, 193, 7, 0.1);
+            border: 2px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .alert-message h3 {
+            color: #ffc107;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .alert-message p {
+            color: #ffc107;
+            opacity: 0.9;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .stat-card {
+            background: rgba(30, 30, 56, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            min-width: 180px;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 168, 255, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: #b4b4b4;
+            font-weight: 500;
+        }
+        
+        .ranking-section {
+            background: rgba(30, 30, 56, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: none;
+        }
+        
+        .ranking-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #00a8ff, #7a00ff, #00a8ff);
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+            border-radius: 24px 24px 0 0;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { background-position: 200% 0; }
+            50% { background-position: -200% 0; }
+        }
+        
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+        
+        .section-title::before {
+            content: "🥇";
+            font-size: 1.8rem;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.7));
+        }
+        
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            background: rgba(22, 26, 43, 0.6);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .ranking-table th,
+        .ranking-table td {
+            padding: 1.5rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .ranking-table th {
+            background: rgba(0, 168, 255, 0.1);
+            font-weight: 700;
+            color: #00a8ff;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .ranking-table tr:hover {
+            background: rgba(0, 168, 255, 0.05);
+        }
+        
+        .rank-position {
+            font-weight: 900;
+            font-size: 1.4rem;
+            text-align: center;
+        }
+        
+        .rank-1 { 
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+        }
+        .rank-2 { 
+            color: #C0C0C0;
+            text-shadow: 0 0 15px rgba(192, 192, 192, 0.7);
+        }
+        .rank-3 { 
+            color: #CD7F32;
+            text-shadow: 0 0 15px rgba(205, 127, 50, 0.7);
+        }
+        
+        .player-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .recent-games {
+            margin-top: 2rem;
+        }
+        
+        .game-item {
+            background: rgba(22, 26, 43, 0.6);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .game-item:hover {
+            background: rgba(0, 168, 255, 0.05);
+            border-color: rgba(0, 168, 255, 0.3);
+            transform: translateX(5px);
+        }
+        
+        .game-result {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .game-result.win { 
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+        .game-result.lose { 
+            color: #ff4757;
+            text-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+        }
+        .game-result.draw { 
+            color: #ffa502;
+            text-shadow: 0 0 10px rgba(255, 165, 2, 0.5);
+        }
+        
+        .no-data {
+            text-align: center;
+            color: #b4b4b4;
+            font-style: italic;
+            padding: 3rem;
+            font-size: 1.1rem;
+        }
+        
+        /* Podium Section */
+        .podium-section {
+            padding: 4rem 2rem;
+            position: relative;
+            z-index: 1;
+            width: 100%;
+        }
+        
+        .podium {
+            display: flex;
+            justify-content: center;
+            align-items: end;
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+        
+        .podium-player {
+            background: rgba(30, 30, 56, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            min-width: 180px;
+        }
+        
+        .podium-player:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 168, 255, 0.3);
+        }
+        
+        .podium-player.first {
+            border-color: #FFD700;
+            box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .podium-player.second {
+            border-color: #C0C0C0;
+            box-shadow: 0 8px 32px rgba(192, 192, 192, 0.3);
+        }
+        
+        .podium-player.third {
+            border-color: #CD7F32;
+            box-shadow: 0 8px 32px rgba(205, 127, 50, 0.3);
+        }
+        
+        .podium-rank {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+        
+        .podium-player.first .podium-rank {
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+        }
+        
+        .podium-player.second .podium-rank {
+            color: #C0C0C0;
+            text-shadow: 0 0 15px rgba(192, 192, 192, 0.7);
+        }
+        
+        .podium-player.third .podium-rank {
+            color: #CD7F32;
+            text-shadow: 0 0 15px rgba(205, 127, 50, 0.7);
+        }
+        
+        .podium-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #e0e0e0;
+        }
+        
+        .podium-score {
+            font-size: 1.1rem;
+            color: #00a8ff;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+        
+        .podium-rate {
+            font-size: 0.9rem;
+            color: #b4b4b4;
+        }
+        
+        /* Top Player Highlight */
+        .top-player {
+            background: rgba(0, 168, 255, 0.05);
+        }
+        
+        .best-score {
+            font-weight: 700;
+            color: #00a8ff;
+        }
+        
+        .win-rate {
+            font-weight: 600;
+        }
+        
+        .wins {
+            font-weight: 600;
+            color: #00ff88;
+        }
+        
+        /* Difficulty Stats */
+        .difficulty-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .difficulty-stat {
+            background: rgba(30, 30, 56, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .difficulty-stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 45px rgba(0, 168, 255, 0.2);
+        }
+        
+        .difficulty-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .difficulty-stat h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #e0e0e0;
+        }
+        
+        .stat-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #b4b4b4;
+        }
+        
+        /* Enhanced Game Items */
+        .game-player {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .difficulty-badge {
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .difficulty-fácil {
+            background: rgba(0, 255, 0, 0.2);
+            color: #00ff00;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+        }
+        
+        .difficulty-normal {
+            background: rgba(255, 255, 0, 0.2);
+            color: #ffff00;
+            border: 1px solid rgba(255, 255, 0, 0.3);
+        }
+        
+        .difficulty-difícil {
+            background: rgba(255, 165, 0, 0.2);
+            color: #ffa500;
+            border: 1px solid rgba(255, 165, 0, 0.3);
+        }
+        
+        .difficulty-expert {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff0000;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+        }
+        
+        .game-time {
+            font-size: 0.85rem;
+            color: #888;
+        }
+        
+        .game-result {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.3rem;
+        }
+        
+        .score {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        
+        .result-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .nav-links {
+                justify-content: center;
+            }
+            
+            .container {
+                padding: 2rem 1rem;
+            }
+            
+            .ranking-title {
+                font-size: 2.2rem;
+            }
+            
+            .ranking-table {
+                font-size: 0.9rem;
+            }
+            
+            .ranking-table th,
+            .ranking-table td {
+                padding: 1rem 0.5rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .game-item {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .ranking-section {
+                padding: 2rem;
+            }
+            
+            .podium {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .podium-player.first {
+                transform: none;
+                order: 1;
+            }
+            
+            .podium-player.second {
+                order: 2;
+            }
+            
+            .podium-player.third {
+                order: 3;
+            }
+            
+            .difficulty-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .nav-links a {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .ranking-title {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.6rem;
+            }
+            
+            .difficulty-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">ByThePong</div>
+            <div class="nav-links">
+                <a href="{% url 'home' %}">🏠 Início</a>
+                <a href="{% url 'index' %}">🎮 Jogar</a>
+                <a href="{% url 'ranking' %}">🏆 Ranking</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        {% if db_unavailable %}
+        <div class="alert-message">
+            <h3>⚠️ Modo Demo</h3>
+            <p>O ranking não está disponível no momento. O jogo funciona normalmente, mas os resultados não são salvos permanentemente.</p>
+        </div>
+        {% endif %}
+        <h1 class="ranking-title">Ranking de Jogadores</h1>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">{{ players.count }}</div>
+                <div class="stat-label">Jogadores</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ recent_games.count }}</div>
+                <div class="stat-label">Partidas Recentes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ total_games }}</div>
+                <div class="stat-label">Total de Partidas</div>
+            </div>
+        </div>
+        
+        <!-- Top 3 Podium -->
+        {% if players %}
+        <div class="podium-section">
+            <h2 class="section-title">🏆 Pódium</h2>
+            <div class="podium">
+                {% if players.1 %}
+                <div class="podium-player second">
+                    <div class="podium-rank">2º</div>
+                    <div class="podium-name">{{ players.1.name }}</div>
+                    <div class="podium-score">{{ players.1.best_score }} pts</div>
+                    <div class="podium-rate">{{ players.1.win_rate|floatformat:1 }}%</div>
+                </div>
+                {% endif %}
+                
+                {% if players.0 %}
+                <div class="podium-player first">
+                    <div class="podium-rank">1º</div>
+                    <div class="podium-name">{{ players.0.name }}</div>
+                    <div class="podium-score">{{ players.0.best_score }} pts</div>
+                    <div class="podium-rate">{{ players.0.win_rate|floatformat:1 }}%</div>
+                </div>
+                {% endif %}
+                
+                {% if players.2 %}
+                <div class="podium-player third">
+                    <div class="podium-rank">3º</div>
+                    <div class="podium-name">{{ players.2.name }}</div>
+                    <div class="podium-score">{{ players.2.best_score }} pts</div>
+                    <div class="podium-rate">{{ players.2.win_rate|floatformat:1 }}%</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="ranking-section">
+            <h2 class="section-title">Ranking Completo</h2>
+            
+            {% if players %}
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th>Posição</th>
+                            <th>Jogador</th>
+                            <th>Melhor Pontuação</th>
+                            <th>Taxa de Vitórias</th>
+                            <th>Total de Jogos</th>
+                            <th>Vitórias</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for player in players %}
+                        <tr class="{% if forloop.counter <= 3 %}top-player{% endif %}">
+                            <td>
+                                <span class="rank-position 
+                                    {% if forloop.counter == 1 %}rank-1
+                                    {% elif forloop.counter == 2 %}rank-2
+                                    {% elif forloop.counter == 3 %}rank-3
+                                    {% endif %}">
+                                    #{{ forloop.counter }}
+                                </span>
+                            </td>
+                            <td class="player-name">{{ player.name }}</td>
+                            <td class="best-score">{{ player.best_score }}</td>
+                            <td class="win-rate">{{ player.win_rate|floatformat:1 }}%</td>
+                            <td>{{ player.total_games }}</td>
+                            <td class="wins">{{ player.total_wins }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="no-data">
+                    <p>Nenhum jogador ainda. Seja o primeiro a jogar! 🎮</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Difficulty Stats -->
+        <div class="ranking-section">
+            <h2 class="section-title">Estatísticas por Dificuldade</h2>
+            <div class="difficulty-stats">
+                <div class="difficulty-stat">
+                    <div class="difficulty-icon">🟢</div>
+                    <h3>Fácil</h3>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ easy_games }}</span>
+                        <span class="stat-label">Partidas</span>
+                    </div>
+                </div>
+                <div class="difficulty-stat">
+                    <div class="difficulty-icon">🟡</div>
+                    <h3>Normal</h3>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ normal_games }}</span>
+                        <span class="stat-label">Partidas</span>
+                    </div>
+                </div>
+                <div class="difficulty-stat">
+                    <div class="difficulty-icon">🟠</div>
+                    <h3>Difícil</h3>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ hard_games }}</span>
+                        <span class="stat-label">Partidas</span>
+                    </div>
+                </div>
+                <div class="difficulty-stat">
+                    <div class="difficulty-icon">🔴</div>
+                    <h3>Expert</h3>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ expert_games }}</span>
+                        <span class="stat-label">Partidas</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ranking-section">
+            <h2 class="section-title">Partidas Recentes</h2>
+            
+            {% if recent_games %}
+                <div class="recent-games">
+                    {% for game in recent_games %}
+                    <div class="game-item">
+                        <div class="game-player">
+                            <div class="player-info">
+                                <strong>{{ game.player.name }}</strong>
+                                <span class="difficulty-badge difficulty-{{ game.difficulty }}">{{ game.difficulty|title }}</span>
+                            </div>
+                            <div class="game-time">{{ game.created_at|date:"d/m/Y H:i" }}</div>
+                        </div>
+                        <div class="game-result">
+                            <div class="score">
+                                <span class="game-result 
+                                    {% if game.won %}win
+                                    {% elif game.player_score == game.bot_score %}draw
+                                    {% else %}lose
+                                    {% endif %}">
+                                    {{ game.player_score }} x {{ game.bot_score }}
+                                </span>
+                            </div>
+                            <div class="result-text">{{ game.result_text }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-data">
+                    <p>Nenhuma partida ainda. Comece a jogar! 🎯</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // Animação de entrada para os cards
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observar todos os cards e elementos
+        document.querySelectorAll('.stat-card, .podium-player, .difficulty-stat, .game-item').forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(30px)';
+            element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(element);
+        });
+
+        // Animação especial para o pódium
+        document.querySelectorAll('.podium-player').forEach((player, index) => {
+            player.style.transitionDelay = `${index * 0.2}s`;
+        });
+    </script>
+</body>
+</html>

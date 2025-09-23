@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ByThePong - Menu Principal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #161a2b 50%, #2c2c54 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            background: rgba(30, 30, 56, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(0, 168, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 168, 255, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo::before {
+            content: "🏓";
+            font-size: 2rem;
+            filter: drop-shadow(0 0 10px rgba(0, 168, 255, 0.7));
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-links a {
+            color: #b4b4b4;
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 168, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .nav-links a:hover {
+            color: #00a8ff;
+            border-color: rgba(0, 168, 255, 0.5);
+            background: rgba(0, 168, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.3);
+        }
+        
+        .nav-links a:hover::before {
+            left: 100%;
+        }
+        
+        .container {
+            flex: 1;
+            padding: 0;
+            position: relative;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 80%, rgba(0, 168, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(122, 0, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            padding: 6rem 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 30px rgba(0, 168, 255, 0.5);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #b4b4b4;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid rgba(0, 168, 255, 0.5);
+            color: #00a8ff;
+            box-shadow: none;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(0, 168, 255, 0.1);
+            border-color: #00a8ff;
+            color: #00a8ff;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            border: none;
+            color: white;
+        }
+        
+        /* Sections */
+        .features-section,
+        .how-to-play-section,
+        .game-setup-section,
+        .about-section {
+            padding: 4rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 3rem;
+        }
+        
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: rgba(30, 30, 56, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 168, 255, 0.3);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 15px rgba(0, 168, 255, 0.5));
+        }
+        
+        .feature-card h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #e0e0e0;
+        }
+        
+        .feature-card p {
+            color: #b4b4b4;
+            line-height: 1.6;
+        }
+        
+        /* Quick Instructions */
+        .quick-instructions {
+            padding: 4rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Instructions Grid */
+        .instructions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .instruction-card {
+            background: rgba(30, 30, 56, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .instruction-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 45px rgba(0, 168, 255, 0.2);
+        }
+        
+        .instruction-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 15px rgba(0, 168, 255, 0.5));
+        }
+        
+        .instruction-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(0, 168, 255, 0.4);
+        }
+        
+        .instruction-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #e0e0e0;
+            margin-top: 1rem;
+        }
+        
+        .instruction-card p {
+            color: #b4b4b4;
+            line-height: 1.6;
+        }
+        
+        /* Game Setup Section */
+        .game-setup-section {
+            background: rgba(30, 30, 56, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .game-setup {
+            background: rgba(30, 30, 56, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4),
+                        0 0 0 1px rgba(255, 255, 255, 0.1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-setup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #00a8ff, #7a00ff, #00a8ff);
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { background-position: 200% 0; }
+            50% { background-position: -200% 0; }
+        }
+        
+        .setup-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+        
+        .setup-title::before {
+            content: "⚙️";
+            font-size: 1.8rem;
+            filter: drop-shadow(0 0 10px rgba(0, 168, 255, 0.7));
+        }
+        
+        .form-group {
+            margin-bottom: 2rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            color: #e0e0e0;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-group label::before {
+            content: "👤";
+            font-size: 1.2rem;
+        }
+        
+        .form-group:nth-child(2) label::before {
+            content: "🎯";
+        }
+        
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            background: rgba(22, 26, 43, 0.8);
+            color: #ffffff;
+            font-size: 1.1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: #00a8ff;
+            background: rgba(22, 26, 43, 0.9);
+            box-shadow: 0 0 0 4px rgba(0, 168, 255, 0.2),
+                        0 8px 25px rgba(0, 168, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .form-group input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .difficulty-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .difficulty-option {
+            position: relative;
+        }
+        
+        .difficulty-option input[type="radio"] {
+            display: none;
+        }
+        
+        .difficulty-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1.5rem 1rem;
+            background: rgba(22, 26, 43, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .difficulty-option label::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.1), rgba(122, 0, 255, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .difficulty-option input[type="radio"]:checked + label {
+            border-color: #00a8ff;
+            background: rgba(0, 168, 255, 0.15);
+            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .difficulty-option input[type="radio"]:checked + label::before {
+            opacity: 1;
+        }
+        
+        .difficulty-option label:hover {
+            border-color: rgba(0, 168, 255, 0.5);
+            background: rgba(0, 168, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .difficulty-option label::before {
+            content: '';
+        }
+        
+        .difficulty-option label span:first-child {
+            font-size: 1.5rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .difficulty-option label span:last-child {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.4);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(135deg, #0099e6 0%, #6b00e6 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 168, 255, 0.6);
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .footer {
+            background: rgba(30, 30, 56, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(0, 168, 255, 0.3);
+            color: #b4b4b4;
+        }
+        
+        .footer p {
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+        
+        /* About Section */
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .about-text {
+            background: rgba(30, 30, 56, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .about-text p {
+            color: #b4b4b4;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .about-text code {
+            background: rgba(0, 168, 255, 0.1);
+            color: #00a8ff;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+        
+        .tech-tag {
+            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 168, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .tech-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 168, 255, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .nav-links {
+                justify-content: center;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .instructions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-instructions {
+                padding: 3rem 1rem;
+            }
+            
+            .difficulty-selector {
+                grid-template-columns: 1fr;
+            }
+            
+            .game-setup {
+                padding: 2rem;
+            }
+            
+            .setup-title {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .features-section,
+            .how-to-play-section,
+            .game-setup-section,
+            .about-section {
+                padding: 3rem 1rem;
+            }
+            
+            .hero-section {
+                padding: 4rem 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.8rem;
+            }
+            
+            .nav-links a {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .game-setup {
+                padding: 1.5rem;
+            }
+            
+            .btn {
+                padding: 1.2rem;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">ByThePong</div>
+            <div class="nav-links">
+                <a href="{% url 'home' %}">🏠 Início</a>
+                <a href="{% url 'index' %}">🎮 Jogar</a>
+                <a href="{% url 'ranking' %}">🏆 Ranking</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">Preparado para Jogar?</h1>
+                <p class="hero-subtitle">Configure seu jogo e mostre suas habilidades no ByThePong</p>
+            </div>
+        </div>
+
+        <!-- Quick Instructions -->
+        <div class="quick-instructions">
+            <h2 class="section-title">🎮 Instruções Rápidas</h2>
+            <div class="instructions-grid">
+                <div class="instruction-card">
+                    <div class="instruction-icon">⌨️</div>
+                    <h3>Controles</h3>
+                    <p><strong>W/S</strong> ou <strong>↑/↓</strong> para mover a raquete</p>
+                </div>
+                <div class="instruction-card">
+                    <div class="instruction-icon">🎯</div>
+                    <h3>Objetivo</h3>
+                    <p>Primeiro a <strong>3 pontos</strong> ou maior pontuação em <strong>2 minutos</strong></p>
+                </div>
+                <div class="instruction-card">
+                    <div class="instruction-icon">⏸️</div>
+                    <h3>Pausar</h3>
+                    <p>Pressione <strong>ESPAÇO</strong> para pausar/continuar</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Setup Section -->
+        <div class="game-setup-section">
+            <div class="game-setup">
+                <h2 class="setup-title">Configurar Jogo</h2>
+                
+                <form id="game-form">
+                    <div class="form-group">
+                        <label for="player-name">Nome do Jogador:</label>
+                        <input type="text" id="player-name" placeholder="Digite seu nome..." maxlength="20" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Nível de Dificuldade:</label>
+                            <div class="difficulty-selector">
+                                <div class="difficulty-option">
+                                    <input type="radio" name="difficulty" value="fácil" id="facil">
+                                    <label for="facil">
+                                        <span>🟢</span>
+                                        <span>Fácil</span>
+                                    </label>
+                                </div>
+                                <div class="difficulty-option">
+                                    <input type="radio" name="difficulty" value="normal" id="normal" checked>
+                                    <label for="normal">
+                                        <span>🟡</span>
+                                        <span>Normal</span>
+                                    </label>
+                                </div>
+                                <div class="difficulty-option">
+                                    <input type="radio" name="difficulty" value="difícil" id="dificil">
+                                    <label for="dificil">
+                                        <span>🟠</span>
+                                        <span>Difícil</span>
+                                    </label>
+                                </div>
+                                <div class="difficulty-option">
+                                    <input type="radio" name="difficulty" value="expert" id="expert">
+                                    <label for="expert">
+                                        <span>🔴</span>
+                                        <span>Expert</span>
+                                    </label>
+                                </div>
+                            </div>
+                    </div>
+                    
+                    <button type="submit" class="btn">▶️ Iniciar Jogo</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 ByThePong - Projeto Acadêmico de POO com Django</p>
+    </footer>
+
+    <script>
+        // Formulário do jogo
+        document.getElementById('game-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const playerName = document.getElementById('player-name').value.trim();
+            const difficulty = document.querySelector('input[name="difficulty"]:checked').value;
+            
+            if (!playerName) {
+                alert('Por favor, digite seu nome!');
+                return;
+            }
+            
+            // Salvar dados no localStorage
+            localStorage.setItem('playerName', playerName);
+            localStorage.setItem('difficulty', difficulty);
+            
+            // Redirecionar para o jogo
+            window.location.href = "{% url 'game' %}";
+        });
+
+        // Animação de entrada para os cards
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observar todos os cards
+        document.querySelectorAll('.instruction-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
