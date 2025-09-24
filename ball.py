@@ -7,7 +7,7 @@ import math
 import random
 
 class Ball:
-    def __init__(self, x: int, y: int, radius: int = 10, initial_speed: int = 5):
+    def __init__(self, x: int, y: int, radius: int = 10, initial_speed: int = 5, max_speed: int = 12, speed_increase_factor: float = 1.05, initial_angle_range: float = math.pi/4):
         """
         Inicializa a bola com posição e propriedades físicas
         
@@ -16,13 +16,19 @@ class Ball:
             y (int): Posição Y inicial
             radius (int): Raio da bola
             initial_speed (int): Velocidade inicial da bola
+            max_speed (int): Velocidade máxima permitida
+            speed_increase_factor (float): Fator de aumento de velocidade por rebote
+            initial_angle_range (float): amplitude do ângulo inicial (em radianos)
         """
         self.__x = x
         self.__y = y
         self.__radius = radius
         self.__speed = initial_speed
         self.__initial_speed = initial_speed
-        self.__angle = random.uniform(-math.pi/4, math.pi/4)  # Ângulo aleatório inicial
+        self.__max_speed = max_speed
+        self.__speed_increase_factor = speed_increase_factor
+        self.__initial_angle_range = max(0.05, min(initial_angle_range, math.pi/2))
+        self.__angle = random.uniform(-self.__initial_angle_range, self.__initial_angle_range)
         self.__dx = self.__speed * math.cos(self.__angle)
         self.__dy = self.__speed * math.sin(self.__angle)
     
@@ -84,17 +90,40 @@ class Ball:
         # Converte para ângulo (-45 a 45 graus)
         angle = (relative_intersect_y - 0.5) * math.pi / 2
         
-        # Aumenta ligeiramente a velocidade
-        self.__speed = min(self.__speed * 1.05, 12)
+        # Aumenta velocidade dentro do limite
+        self.__speed = min(self.__speed * self.__speed_increase_factor, self.__max_speed)
         
-        # Inverte apenas a direção horizontal (sempre)
-        self.__dx = -self.__dx
+        # Define direção horizontal após o rebote (inverte)
+        horizontal_direction = -1 if self.__dx > 0 else 1
+        
+        # Recalcula componentes dx/dy mantendo o novo módulo de velocidade
+        self.__dx = horizontal_direction * max(3.0, abs(self.__speed * math.cos(angle)))
         self.__dy = self.__speed * math.sin(angle)
         
-        # Garante velocidade mínima
-        if abs(self.__dx) < 2:
-            self.__dx = 2 if self.__dx > 0 else -2
-    
+    def accelerate(self, factor: float):
+        """
+        Acelera a bola multiplicando sua velocidade e clampando ao máximo.
+        Args:
+            factor (float): fator > 1.0 para acelerar levemente por frame
+        """
+        if factor <= 1.0:
+            return
+        # Escala componentes
+        new_dx = self.__dx * factor
+        new_dy = self.__dy * factor
+        # Calcula nova velocidade e aplica teto
+        new_speed = (new_dx ** 2 + new_dy ** 2) ** 0.5
+        if new_speed > self.__max_speed:
+            # Normaliza para max_speed
+            if new_speed > 0:
+                scale = self.__max_speed / new_speed
+                new_dx *= scale
+                new_dy *= scale
+                new_speed = self.__max_speed
+        self.__dx = new_dx
+        self.__dy = new_dy
+        self.__speed = new_speed
+        
     def reset(self, x: int, y: int):
         """
         Reseta a bola para uma nova posição
@@ -106,8 +135,12 @@ class Ball:
         self.__x = x
         self.__y = y
         self.__speed = self.__initial_speed
-        self.__angle = random.uniform(-math.pi/4, math.pi/4)
-        self.__dx = self.__speed * math.cos(self.__angle)
+        self.__angle = random.uniform(-self.__initial_angle_range, self.__initial_angle_range)
+        # Sorteia direção horizontal inicial para evitar previsibilidade
+        direction = random.choice([-1, 1])
+        # Garante componente horizontal mínima
+        base_dx = abs(self.__speed * math.cos(self.__angle))
+        self.__dx = direction * max(3.0, base_dx)
         self.__dy = self.__speed * math.sin(self.__angle)
     
     def get_rect(self):

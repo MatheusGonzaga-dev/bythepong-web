@@ -8,23 +8,35 @@ class SimpleGame:
         self.difficulty = difficulty
         self.canvas_width = 800
         self.canvas_height = 600
-        self.paddle_width = 15
-        self.paddle_height = 100
         self.ball_radius = 10
+        
+        # Dimensões de raquete por dificuldade
+        if difficulty == 'fácil':
+            self.paddle_width_l, self.paddle_height_l = 15, 100
+            self.paddle_width_r, self.paddle_height_r = 15, 100
+        elif difficulty == 'normal':
+            self.paddle_width_l, self.paddle_height_l = 15, 100
+            self.paddle_width_r, self.paddle_height_r = 15, 100
+        elif difficulty == 'difícil':
+            self.paddle_width_l, self.paddle_height_l = 12, 60
+            self.paddle_width_r, self.paddle_height_r = 12, 60
+        else:  # expert -> jogador pequeno, bot grande
+            self.paddle_width_l, self.paddle_height_l = 10, self.ball_radius * 2
+            self.paddle_width_r, self.paddle_height_r = 16, 120
         
         # Posições iniciais
         self.left_paddle = {
             'x': 50,
-            'y': self.canvas_height // 2 - self.paddle_height // 2,
-            'width': self.paddle_width,
-            'height': self.paddle_height
+            'y': self.canvas_height // 2 - self.paddle_height_l // 2,
+            'width': self.paddle_width_l,
+            'height': self.paddle_height_l
         }
         
         self.right_paddle = {
-            'x': self.canvas_width - 50 - self.paddle_width,
-            'y': self.canvas_height // 2 - self.paddle_height // 2,
-            'width': self.paddle_width,
-            'height': self.paddle_height
+            'x': self.canvas_width - 50 - self.paddle_width_r,
+            'y': self.canvas_height // 2 - self.paddle_height_r // 2,
+            'width': self.paddle_width_r,
+            'height': self.paddle_height_r
         }
         
         self.ball = {
@@ -62,19 +74,19 @@ class SimpleGame:
         if player_direction == 'up':
             self.left_paddle['y'] = max(0, self.left_paddle['y'] - 8)
         elif player_direction == 'down':
-            self.left_paddle['y'] = min(self.canvas_height - self.paddle_height, 
+            self.left_paddle['y'] = min(self.canvas_height - self.paddle_height_l, 
                                       self.left_paddle['y'] + 8)
         
         # IA da raquete direita
         ball_center_y = self.ball['y']
-        paddle_center_y = self.right_paddle['y'] + self.paddle_height // 2
+        paddle_center_y = self.right_paddle['y'] + self.paddle_height_r // 2
         
         speed = 4 if self.difficulty == 'fácil' else 6 if self.difficulty == 'normal' else 8 if self.difficulty == 'difícil' else 10
         
         if ball_center_y < paddle_center_y - 10:
             self.right_paddle['y'] = max(0, self.right_paddle['y'] - speed)
         elif ball_center_y > paddle_center_y + 10:
-            self.right_paddle['y'] = min(self.canvas_height - self.paddle_height,
+            self.right_paddle['y'] = min(self.canvas_height - self.paddle_height_r,
                                        self.right_paddle['y'] + speed)
         
         # Mover bola
@@ -82,16 +94,21 @@ class SimpleGame:
         self.ball['y'] += self.ball['dy']
         
         # Colisão com topo/fundo
-        if self.ball['y'] <= self.ball['radius'] or self.ball['y'] >= self.canvas_height - self.ball['radius']:
+        if self.ball['y'] <= self.ball_radius or self.ball['y'] >= self.canvas_height - self.ball_radius:
             self.ball['dy'] = -self.ball['dy']
         
-        # Colisão com raquetes
-        if (self.ball['x'] - self.ball['radius'] <= self.left_paddle['x'] + self.paddle_width and
-            self.left_paddle['y'] <= self.ball['y'] <= self.left_paddle['y'] + self.paddle_height):
+        # Colisão com raquete esquerda (jogador)
+        if (self.ball['x'] - self.ball_radius <= self.left_paddle['x'] + self.paddle_width_l and
+            self.ball['x'] + self.ball_radius >= self.left_paddle['x'] and
+            self.ball['y'] + self.ball_radius >= self.left_paddle['y'] and
+            self.ball['y'] - self.ball_radius <= self.left_paddle['y'] + self.paddle_height_l):
             self.ball['dx'] = abs(self.ball['dx'])
-            
-        if (self.ball['x'] + self.ball['radius'] >= self.right_paddle['x'] and
-            self.right_paddle['y'] <= self.ball['y'] <= self.right_paddle['y'] + self.paddle_height):
+        
+        # Colisão com raquete direita (bot)
+        if (self.ball['x'] + self.ball_radius >= self.right_paddle['x'] and
+            self.ball['x'] - self.ball_radius <= self.right_paddle['x'] + self.paddle_width_r and
+            self.ball['y'] + self.ball_radius >= self.right_paddle['y'] and
+            self.ball['y'] - self.ball_radius <= self.right_paddle['y'] + self.paddle_height_r):
             self.ball['dx'] = -abs(self.ball['dx'])
         
         # Pontuação
@@ -130,7 +147,9 @@ class SimpleGame:
             'game_over': self.game_over,
             'winner': self.winner,
             'remaining_time': self.remaining_time,
-            'difficulty': self.difficulty
+            'difficulty': self.difficulty,
+            'canvas_width': self.canvas_width,
+            'canvas_height': self.canvas_height
         }
     
     def get_remaining_time(self):

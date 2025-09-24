@@ -29,15 +29,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
         
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
+        .header-content { max-width: 1120px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
         
         .logo {
             font-size: 2.2rem;
@@ -58,23 +50,9 @@
             filter: drop-shadow(0 0 10px rgba(0, 168, 255, 0.7));
         }
         
-        .nav-links {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
+        .nav-links { display: flex; gap: 1rem; flex-wrap: wrap; padding: .5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 24px rgba(0, 0, 0, 0.25); }
         
-        .nav-links a {
-            color: #b4b4b4;
-            text-decoration: none;
-            padding: 0.8rem 1.5rem;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 500;
-            position: relative;
-            overflow: hidden;
-        }
+        .nav-links a { color: #b4b4b4; text-decoration: none; padding: 0.8rem 1.2rem; border: none; border-radius: 10px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-weight: 600; position: relative; overflow: hidden; background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(6px); }
         
         .nav-links a::before {
             content: '';
@@ -87,23 +65,13 @@
             transition: left 0.5s;
         }
         
-        .nav-links a:hover {
-            color: #00a8ff;
-            border-color: rgba(0, 168, 255, 0.5);
-            background: rgba(0, 168, 255, 0.1);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.3);
-        }
+        .nav-links a:hover { color: #00a8ff; background: rgba(0, 168, 255, 0.1); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 168, 255, 0.3); }
         
         .nav-links a:hover::before {
             left: 100%;
         }
         
-        .container {
-            flex: 1;
-            padding: 0;
-            position: relative;
-        }
+        .container { flex: 1; padding: 0; position: relative; display: flex; flex-direction: column; align-items: center; }
         
         .container::before {
             content: '';
@@ -118,38 +86,13 @@
         }
         
         /* Hero Section */
-        .hero-section {
-            padding: 6rem 2rem;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
+        .hero-section { padding: 2.5rem 1rem; text-align: center; position: relative; z-index: 1; }
         
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+        .hero-content { max-width: 780px; margin: 0 auto; }
         
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 0 30px rgba(0, 168, 255, 0.5);
-        }
+        .hero-title { font-size: 2.2rem; font-weight: 900; background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: .75rem; text-shadow: 0 0 30px rgba(0, 168, 255, 0.5); }
         
-        .hero-subtitle {
-            font-size: 1.3rem;
-            color: #b4b4b4;
-            margin-bottom: 3rem;
-            line-height: 1.6;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+        .hero-subtitle { font-size: 1rem; color: #b4b4b4; margin-bottom: 1.5rem; line-height: 1.5; max-width: 600px; margin-left: auto; margin-right: auto; }
         
         .hero-buttons {
             display: flex;
@@ -243,43 +186,19 @@
         }
         
         /* Quick Instructions */
-        .quick-instructions {
-            padding: 4rem 2rem;
-            position: relative;
-            z-index: 1;
-        }
+        .quick-instructions { padding: 1.5rem 1rem; position: relative; z-index: 1; }
         
         /* Instructions Grid */
-        .instructions-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            max-width: 900px;
-            margin: 0 auto;
-        }
+        .instructions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 780px; margin: 0 auto; }
         
-        .instruction-card {
-            background: rgba(30, 30, 56, 0.8);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 2rem;
-            border: 1px solid rgba(0, 168, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            position: relative;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
+        .instruction-card { background: rgba(30, 30, 56, 0.8); backdrop-filter: blur(20px); border-radius: 14px; padding: 1rem; border: 1px solid rgba(0, 168, 255, 0.2); box-shadow: 0 6px 22px rgba(0, 0, 0, 0.28); position: relative; transition: all 0.3s ease; text-align: center; }
         
         .instruction-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 45px rgba(0, 168, 255, 0.2);
         }
         
-        .instruction-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            filter: drop-shadow(0 0 15px rgba(0, 168, 255, 0.5));
-        }
+        .instruction-icon { font-size: 1.8rem; margin-bottom: .5rem; filter: drop-shadow(0 0 12px rgba(0, 168, 255, 0.5)); }
         
         .instruction-number {
             position: absolute;
@@ -298,72 +217,23 @@
             box-shadow: 0 4px 15px rgba(0, 168, 255, 0.4);
         }
         
-        .instruction-card h3 {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #e0e0e0;
-            margin-top: 1rem;
-        }
+        .instruction-card h3 { font-size: 1.05rem; margin-bottom: .25rem; color: #e0e0e0; }
         
-        .instruction-card p {
-            color: #b4b4b4;
-            line-height: 1.6;
-        }
+        .instruction-card p { color: #b4b4b4; line-height: 1.4; font-size: .95rem; }
         
         /* Game Setup Section */
-        .game-setup-section {
-            background: rgba(30, 30, 56, 0.3);
-            backdrop-filter: blur(10px);
-        }
+        .game-setup-section { background: rgba(30, 30, 56, 0.3); backdrop-filter: blur(10px); width: 100%; display: flex; justify-content: center; padding: 1.5rem 1rem 3rem; }
         
-        .game-setup {
-            background: rgba(30, 30, 56, 0.8);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 3rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4),
-                        0 0 0 1px rgba(255, 255, 255, 0.1),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(0, 168, 255, 0.2);
-            max-width: 600px;
-            width: 100%;
-            margin: 0 auto;
-            position: relative;
-            overflow: hidden;
-        }
+        .game-setup { background: rgba(30, 30, 56, 0.85); backdrop-filter: blur(20px); border-radius: 18px; padding: 1.75rem; box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.15); border: 1px solid rgba(0, 168, 255, 0.18); max-width: 720px; width: 100%; position: relative; overflow: hidden; }
         
-        .game-setup::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #00a8ff, #7a00ff, #00a8ff);
-            background-size: 200% 100%;
-            animation: shimmer 3s ease-in-out infinite;
-        }
+        .game-setup::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #00a8ff, #7a00ff, #00a8ff); background-size: 200% 100%; animation: shimmer 3s ease-in-out infinite; }
         
         @keyframes shimmer {
             0%, 100% { background-position: 200% 0; }
             50% { background-position: -200% 0; }
         }
         
-        .setup-title {
-            text-align: center;
-            margin-bottom: 2.5rem;
-            font-size: 2.2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.8rem;
-        }
+        .setup-title { text-align: center; margin-bottom: 1.25rem; font-size: 1.6rem; font-weight: 700; background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; justify-content: center; gap: .6rem; }
         
         .setup-title::before {
             content: "⚙️";
@@ -371,9 +241,7 @@
             filter: drop-shadow(0 0 10px rgba(0, 168, 255, 0.7));
         }
         
-        .form-group {
-            margin-bottom: 2rem;
-        }
+        .form-group { margin-bottom: 1.25rem; }
         
         .form-group label {
             display: block;
@@ -395,17 +263,7 @@
             content: "🎯";
         }
         
-        .form-group input[type="text"] {
-            width: 100%;
-            padding: 1.2rem 1.5rem;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            background: rgba(22, 26, 43, 0.8);
-            color: #ffffff;
-            font-size: 1.1rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(10px);
-        }
+        .form-group input[type="text"] { width: 100%; padding: .9rem 1rem; border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 12px; background: rgba(22, 26, 43, 0.85); color: #ffffff; font-size: 1rem; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(10px); }
         
         .form-group input[type="text"]:focus {
             outline: none;
@@ -420,12 +278,7 @@
             color: rgba(255, 255, 255, 0.5);
         }
         
-        .difficulty-selector {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-top: 1rem;
-        }
+        .difficulty-selector { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .75rem; margin-top: .5rem; }
         
         .difficulty-option {
             position: relative;
@@ -435,21 +288,7 @@
             display: none;
         }
         
-        .difficulty-option label {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 1.5rem 1rem;
-            background: rgba(22, 26, 43, 0.6);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
+        .difficulty-option label { display: flex; flex-direction: column; align-items: center; gap: .4rem; padding: 1rem .75rem; background: rgba(22, 26, 43, 0.65); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 12px; cursor: pointer; transition: all .25s cubic-bezier(.4,0,.2,1); text-align: center; position: relative; overflow: hidden; }
         
         .difficulty-option label::before {
             content: '';
@@ -463,13 +302,7 @@
             transition: opacity 0.3s ease;
         }
         
-        .difficulty-option input[type="radio"]:checked + label {
-            border-color: #00a8ff;
-            background: rgba(0, 168, 255, 0.15);
-            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.3),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            transform: translateY(-3px);
-        }
+        .difficulty-option input[type="radio"]:checked + label { border-color: #00a8ff; background: rgba(0, 168, 255, 0.14); box-shadow: 0 8px 22px rgba(0, 168, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
         
         .difficulty-option input[type="radio"]:checked + label::before {
             opacity: 1;
@@ -485,33 +318,130 @@
             content: '';
         }
         
-        .difficulty-option label span:first-child {
-            font-size: 1.5rem;
-            margin-bottom: 0.3rem;
+        .difficulty-option label span:first-child { font-size: 1.2rem; margin-bottom: 0.1rem; }
+        
+        .difficulty-option label span:last-child { font-weight: 600; font-size: .95rem; }
+        
+        .difficulty-option label small {
+            display: block;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0.3rem;
+            line-height: 1.2;
+            font-weight: 400;
         }
         
-        .difficulty-option label span:last-child {
-            font-weight: 600;
-            font-size: 1rem;
-        }
+        /* Theme Selector Styles */
+        .theme-selector { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .75rem; margin-top: .5rem; }
         
-        .btn {
-            width: 100%;
-            padding: 1.5rem 2rem;
-            background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%);
-            border: none;
-            border-radius: 16px;
-            color: white;
-            font-size: 1.3rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        .theme-option {
             position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.4);
         }
+        
+        .theme-option input[type="radio"] {
+            display: none;
+        }
+        
+        .theme-option label { display: flex; flex-direction: column; align-items: center; gap: .4rem; padding: 1rem .75rem; background: rgba(22, 26, 43, 0.65); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 12px; cursor: pointer; transition: all .25s cubic-bezier(.4,0,.2,1); text-align: center; position: relative; overflow: hidden; }
+        
+        .theme-option input[type="radio"]:checked + label { border-color: #00a8ff; background: rgba(0, 168, 255, 0.14); box-shadow: 0 8px 22px rgba(0, 168, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
+        
+        .theme-option label:hover {
+            border-color: rgba(0, 168, 255, 0.5);
+            background: rgba(0, 168, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .theme-preview { width: 36px; height: 26px; border-radius: 8px; border: 2px solid rgba(255, 255, 255, 0.3); position: relative; overflow: hidden; }
+        
+        .theme-preview.classic {
+            background: linear-gradient(180deg, #1a1a1a 0%, #000000 100%);
+            position: relative;
+        }
+        
+        .theme-preview.classic::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 15px;
+            background: #fff;
+            border-radius: 2px;
+        }
+        
+        .theme-preview.classic::after {
+            content: '';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 15px;
+            background: #fff;
+            border-radius: 2px;
+        }
+        
+        .theme-preview.neon {
+            background: linear-gradient(45deg, #0a0a0a 0%, #1a0033 100%);
+            box-shadow: 0 0 20px #00ffff, inset 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+        
+        .theme-preview.neon::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 15px;
+            background: #00ffff;
+            border-radius: 2px;
+            box-shadow: 0 0 10px #00ffff;
+        }
+        
+        .theme-preview.neon::after {
+            content: '';
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 15px;
+            background: #ff00ff;
+            border-radius: 2px;
+            box-shadow: 0 0 10px #ff00ff;
+        }
+        
+        .theme-preview.retro {
+            background: linear-gradient(45deg, #2d1b69 0%, #11998e 100%);
+            position: relative;
+        }
+        
+        .theme-preview.retro::before { content: ''; }
+        
+        .theme-preview.space {
+            background: linear-gradient(45deg, #000428 0%, #004e92 100%);
+            position: relative;
+        }
+        
+        .theme-option label span:nth-child(2) {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .theme-option label small {
+            display: block;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 0.3rem;
+            line-height: 1.2;
+            font-weight: 400;
+        }
+        
+        .btn { width: 100%; padding: 1.1rem 1.5rem; background: linear-gradient(135deg, #00a8ff 0%, #7a00ff 100%); border: none; border-radius: 14px; color: white; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all .3s cubic-bezier(.4,0,.2,1); text-transform: uppercase; letter-spacing: .5px; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(0, 168, 255, 0.4); }
         
         .btn::before {
             content: '';
@@ -607,87 +537,27 @@
         }
         
         @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-            
-            .nav-links {
-                justify-content: center;
-            }
-            
-            .hero-title {
-                font-size: 2.5rem;
-            }
-            
-            .hero-subtitle {
-                font-size: 1.1rem;
-            }
-            
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .instructions-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .quick-instructions {
-                padding: 3rem 1rem;
-            }
-            
-            .difficulty-selector {
-                grid-template-columns: 1fr;
-            }
-            
-            .game-setup {
-                padding: 2rem;
-            }
-            
-            .setup-title {
-                font-size: 1.8rem;
-            }
-            
-            .section-title {
-                font-size: 2rem;
-            }
-            
-            .features-section,
-            .how-to-play-section,
-            .game-setup-section,
-            .about-section {
-                padding: 3rem 1rem;
-            }
-            
-            .hero-section {
-                padding: 4rem 1rem;
-            }
+            .header-content { flex-direction: column; gap: 1rem; text-align: center; }
+            .nav-links { justify-content: center; }
+            .hero-title { font-size: 2.5rem; }
+            .hero-subtitle { font-size: 1.1rem; }
+            .hero-buttons { flex-direction: column; align-items: center; }
+            .features-grid { grid-template-columns: 1fr; }
+            .instructions-grid { grid-template-columns: 1fr; }
+            .quick-instructions { padding: 3rem 1rem; }
+            .difficulty-selector { grid-template-columns: 1fr; }
+            .game-setup { padding: 2rem; }
+            .setup-title { font-size: 1.8rem; }
+            .section-title { font-size: 2rem; }
+            .features-section, .how-to-play-section, .game-setup-section, .about-section { padding: 3rem 1rem; }
+            .hero-section { padding: 4rem 1rem; }
         }
         
         @media (max-width: 480px) {
-            .logo {
-                font-size: 1.8rem;
-            }
-            
-            .nav-links a {
-                padding: 0.6rem 1rem;
-                font-size: 0.9rem;
-            }
-            
-            .game-setup {
-                padding: 1.5rem;
-            }
-            
-            .btn {
-                padding: 1.2rem;
-                font-size: 1.1rem;
-            }
+            .logo { font-size: 1.8rem; }
+            .nav-links a { padding: 0.6rem 1rem; font-size: 0.9rem; }
+            .game-setup { padding: 1.5rem; }
+            .btn { padding: 1.2rem; font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -746,6 +616,44 @@
                     </div>
                     
                     <div class="form-group">
+                        <label>Tema do Jogo:</label>
+                        <div class="theme-selector">
+                            <div class="theme-option">
+                                <input type="radio" name="theme" value="classic" id="classic" checked>
+                                <label for="classic">
+                                    <span class="theme-preview classic"></span>
+                                    <span>Clássico</span>
+                                    <small>Fundo elegante com linhas sutis</small>
+                                </label>
+                            </div>
+                            <div class="theme-option">
+                                <input type="radio" name="theme" value="neon" id="neon">
+                                <label for="neon">
+                                    <span class="theme-preview neon"></span>
+                                    <span>Neon</span>
+                                    <small>Ondas animadas e pontos brilhantes</small>
+                                </label>
+                            </div>
+                            <div class="theme-option">
+                                <input type="radio" name="theme" value="retro" id="retro">
+                                <label for="retro">
+                                    <span class="theme-preview retro"></span>
+                                    <span>Retro</span>
+                                    <small>Formas geométricas dos anos 80</small>
+                                </label>
+                            </div>
+                            <div class="theme-option">
+                                <input type="radio" name="theme" value="space" id="space">
+                                <label for="space">
+                                    <span class="theme-preview space"></span>
+                                    <span>Espacial</span>
+                                    <small>Estrelas piscando e nebulosa</small>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
                         <label>Nível de Dificuldade:</label>
                             <div class="difficulty-selector">
                                 <div class="difficulty-option">
@@ -753,6 +661,7 @@
                                     <label for="facil">
                                         <span>🟢</span>
                                         <span>Fácil</span>
+                                        <small>Raquete GIGANTE • IA muito burra • Bola super lenta</small>
                                     </label>
                                 </div>
                                 <div class="difficulty-option">
@@ -760,6 +669,7 @@
                                     <label for="normal">
                                         <span>🟡</span>
                                         <span>Normal</span>
+                                        <small>Raquete média • IA equilibrada • Velocidade média</small>
                                     </label>
                                 </div>
                                 <div class="difficulty-option">
@@ -767,6 +677,7 @@
                                     <label for="dificil">
                                         <span>🟠</span>
                                         <span>Difícil</span>
+                                        <small>Raquete pequena • IA rápida • Bola rápida</small>
                                     </label>
                                 </div>
                                 <div class="difficulty-option">
@@ -774,6 +685,7 @@
                                     <label for="expert">
                                         <span>🔴</span>
                                         <span>Expert</span>
+                                        <small>Raquete MINÚSCULA • IA PERFEITA • Bola ULTRA RÁPIDA</small>
                                     </label>
                                 </div>
                             </div>
@@ -796,6 +708,7 @@
             
             const playerName = document.getElementById('player-name').value.trim();
             const difficulty = document.querySelector('input[name="difficulty"]:checked').value;
+            const theme = document.querySelector('input[name="theme"]:checked').value;
             
             if (!playerName) {
                 alert('Por favor, digite seu nome!');
@@ -805,17 +718,14 @@
             // Salvar dados no localStorage
             localStorage.setItem('playerName', playerName);
             localStorage.setItem('difficulty', difficulty);
+            localStorage.setItem('theme', theme);
             
             // Redirecionar para o jogo
             window.location.href = "{% url 'game' %}";
         });
-
+        
         // Animação de entrada para os cards
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -824,8 +734,6 @@
                 }
             });
         }, observerOptions);
-
-        // Observar todos os cards
         document.querySelectorAll('.instruction-card').forEach(card => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(30px)';

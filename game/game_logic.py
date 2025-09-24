@@ -139,8 +139,19 @@ class Game:
         
         # Inicializar objetos do jogo
         self.__ball = Ball(width // 2, height // 2)
-        self.__left_paddle = Paddle(50, height // 2 - 50)
-        self.__right_paddle = Paddle(width - 65, height // 2 - 50)
+        # Ajuste de tamanho de raquete por dificuldade
+        if difficulty == 'expert':
+            left_w, left_h = 10, self.__ball.radius * 2   # jogador pequeno
+            right_w, right_h = 16, 120                    # bot grande
+        elif difficulty == 'difícil':
+            left_w, left_h = 12, 60
+            right_w, right_h = 12, 60
+        else:
+            left_w, left_h = 15, 100
+            right_w, right_h = 15, 100
+        
+        self.__left_paddle = Paddle(50, height // 2 - left_h // 2, left_w, left_h)
+        self.__right_paddle = Paddle(width - 50 - right_w, height // 2 - right_h // 2, right_w, right_h)
         
         # Configurar velocidade baseada na dificuldade
         self.__ball.set_velocity(

@@ -169,11 +169,60 @@
                         0 0 0 1px rgba(0, 168, 255, 0.3);
             border: 2px solid rgba(0, 168, 255, 0.2);
         }
+        /* Fullscreen layout */
+        .game-canvas-container:fullscreen { width: 100vw; height: 100vh; border: none; border-radius: 0; box-shadow: none; }
+        .game-canvas-container:fullscreen .fullscreen-btn { top: 16px; right: 16px; }
+        .game-canvas-container:fullscreen + .controls { display: none; }
         
         .game-canvas {
             background: linear-gradient(45deg, #0a0a1a 0%, #1a1a2e 100%);
             display: block;
             border-radius: 18px;
+            transition: all 0.3s ease;
+        }
+        .game-canvas:fullscreen, .game-canvas-container:fullscreen .game-canvas { width: 100vw !important; height: 100vh !important; border-radius: 0; }
+        
+        /* Fullscreen button */
+        .fullscreen-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 5;
+            background: rgba(0,0,0,0.5);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            padding: 6px 10px;
+            cursor: pointer;
+            backdrop-filter: blur(6px);
+        }
+        .fullscreen-btn:hover { background: rgba(0,0,0,0.7); }
+        
+        /* Theme Styles */
+        .game-canvas.theme-classic {
+            box-shadow: 
+                0 0 30px rgba(255, 255, 255, 0.2),
+                inset 0 0 30px rgba(255, 255, 255, 0.05);
+        }
+        
+        .game-canvas.theme-neon {
+            box-shadow: 
+                0 0 40px rgba(0, 255, 255, 0.4),
+                inset 0 0 40px rgba(0, 255, 255, 0.1),
+                0 0 80px rgba(255, 0, 255, 0.2);
+        }
+        
+        .game-canvas.theme-retro {
+            box-shadow: 
+                0 0 30px rgba(255, 107, 107, 0.3),
+                inset 0 0 30px rgba(78, 205, 196, 0.1);
+        }
+        
+        .game-canvas.theme-space {
+            box-shadow: 
+                0 0 40px rgba(255, 255, 0, 0.4),
+                inset 0 0 40px rgba(255, 255, 0, 0.1);
         }
         
         .game-overlay {
@@ -275,6 +324,96 @@
             box-shadow: 0 12px 35px rgba(102, 102, 102, 0.6);
         }
         
+        .game-info {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .difficulty-indicator {
+            background: rgba(30, 30, 56, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            flex: 1;
+        }
+        
+        .theme-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: rgba(30, 30, 56, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .theme-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+        
+        .theme-indicator span:last-child {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #00a8ff;
+        }
+        
+        .difficulty-indicator span {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #00a8ff;
+            min-width: 80px;
+        }
+        
+        .difficulty-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .difficulty-progress {
+            height: 100%;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .difficulty-progress.easy {
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            width: 25%;
+        }
+        
+        .difficulty-progress.normal {
+            background: linear-gradient(90deg, #FFC107, #FF9800);
+            width: 50%;
+        }
+        
+        .difficulty-progress.hard {
+            background: linear-gradient(90deg, #FF5722, #F44336);
+            width: 75%;
+        }
+        
+        .difficulty-progress.expert {
+            background: linear-gradient(90deg, #9C27B0, #E91E63);
+            width: 100%;
+        }
+
         .controls {
             margin-top: 2rem;
             text-align: center;
@@ -381,7 +520,21 @@
             </div>
         </div>
         
-        <div class="game-canvas-container">
+        <div class="game-info">
+            <div class="difficulty-indicator">
+                <span id="difficulty-display">Normal</span>
+                <div class="difficulty-bar">
+                    <div id="difficulty-progress" class="difficulty-progress"></div>
+                </div>
+            </div>
+            <div class="theme-indicator">
+                <span class="theme-label">Tema:</span>
+                <span id="theme-display">Clássico</span>
+            </div>
+        </div>
+        
+        <div class="game-canvas-container" id="canvas-container">
+            <button id="fullscreen-btn" class="fullscreen-btn">Tela Cheia</button>
             <canvas id="game-canvas" class="game-canvas" width="800" height="600"></canvas>
             
             <div id="game-overlay" class="game-overlay">
@@ -432,11 +585,40 @@
                 document.getElementById('start-btn').addEventListener('click', () => {
                     this.startGame();
                 });
+                
+                // Botão de tela cheia
+                const fsBtn = document.getElementById('fullscreen-btn');
+                fsBtn.addEventListener('click', () => this.toggleFullscreen());
+                document.addEventListener('fullscreenchange', () => this.updateFullscreenUI());
+            }
+            
+            toggleFullscreen() {
+                const container = document.getElementById('canvas-container');
+                if (!document.fullscreenElement) {
+                    if (container.requestFullscreen) container.requestFullscreen();
+                } else {
+                    if (document.exitFullscreen) document.exitFullscreen();
+                }
+            }
+            
+            updateFullscreenUI() {
+                const fsBtn = document.getElementById('fullscreen-btn');
+                const isFs = !!document.fullscreenElement;
+                fsBtn.textContent = isFs ? 'Janela' : 'Tela Cheia';
+                // In fullscreen, stretch canvas to viewport via style as fallback for older browsers
+                if (isFs) {
+                    this.canvas.style.width = '100vw';
+                    this.canvas.style.height = '100vh';
+                } else {
+                    this.canvas.style.width = '';
+                    this.canvas.style.height = '';
+                }
             }
             
             loadGameData() {
                 const playerName = localStorage.getItem('playerName');
                 const difficulty = localStorage.getItem('difficulty');
+                const theme = localStorage.getItem('theme') || 'classic';
                 
                 if (!playerName || !difficulty) {
                     alert('Dados do jogo não encontrados. Redirecionando...');
@@ -445,20 +627,17 @@
                 }
                 
                 document.getElementById('player-name').textContent = playerName;
-                this.startNewGame(playerName, difficulty);
+                this.updateDifficultyDisplay(difficulty);
+                this.applyTheme(theme);
+                this.startNewGame(playerName, difficulty, theme);
             }
             
-            async startNewGame(playerName, difficulty) {
+            async startNewGame(playerName, difficulty, theme) {
                 try {
                     const response = await fetch('/api/start-game/', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            player_name: playerName,
-                            difficulty: difficulty
-                        })
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ player_name: playerName, difficulty: difficulty, theme: theme })
                     });
                     
                     const data = await response.json();
@@ -512,12 +691,8 @@
                 try {
                     const response = await fetch('/api/update-game/', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            direction: direction
-                        })
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ direction: direction })
                     });
                     
                     const data = await response.json();
@@ -527,7 +702,6 @@
                         this.updateUI();
                         this.render();
                         
-                        // Verificar fim do jogo
                         if (this.gameState.game_over) {
                             this.endGame();
                         }
@@ -545,15 +719,176 @@
                 const seconds = this.gameState.remaining_time % 60;
                 document.getElementById('timer').textContent = 
                     `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                this.updateFullscreenUI();
+            }
+            
+            updateDifficultyDisplay(difficulty) {
+                const display = document.getElementById('difficulty-display');
+                const progress = document.getElementById('difficulty-progress');
+                
+                const difficultyMap = {
+                    'fácil': { name: 'Fácil', class: 'easy' },
+                    'normal': { name: 'Normal', class: 'normal' },
+                    'difícil': { name: 'Difícil', class: 'hard' },
+                    'expert': { name: 'Expert', class: 'expert' }
+                };
+                
+                const config = difficultyMap[difficulty] || difficultyMap['normal'];
+                display.textContent = config.name;
+                progress.className = `difficulty-progress ${config.class}`;
+            }
+            
+            applyTheme(theme) {
+                const canvas = document.getElementById('game-canvas');
+                const themeDisplay = document.getElementById('theme-display');
+                canvas.classList.remove('theme-classic', 'theme-neon', 'theme-retro', 'theme-space');
+                canvas.classList.add(`theme-${theme}`);
+                const themeNames = { 'classic': 'Clássico', 'neon': 'Neon', 'retro': 'Retro', 'space': 'Espacial' };
+                themeDisplay.textContent = themeNames[theme] || 'Clássico';
+            }
+            
+            getThemeColors(theme) {
+                const themes = {
+                    classic: { centerLine: '#ffffff', ball: { easy: '#4caf50', normal: '#ffc107', hard: '#ff5722', expert: '#ff1744' }, leftPaddle: ['#4CAF50', '#2E7D32'], rightPaddle: ['#2196F3', '#1565C0'] },
+                    neon: { centerLine: '#00ffff', ball: { easy: '#00ff00', normal: '#ffff00', hard: '#ff00ff', expert: '#ff0040' }, leftPaddle: ['#00ffff', '#00cccc'], rightPaddle: ['#ff00ff', '#cc00cc'] },
+                    retro: { centerLine: '#ff6b6b', ball: { easy: '#4ecdc4', normal: '#ffe66d', hard: '#ff6b6b', expert: '#a8e6cf' }, leftPaddle: ['#ff6b6b', '#ff5252'], rightPaddle: ['#4ecdc4', '#26a69a'] },
+                    space: { centerLine: '#ffffff', ball: { easy: '#64b5f6', normal: '#ffeb3b', hard: '#ff9800', expert: '#e91e63' }, leftPaddle: ['#ffffff', '#e0e0e0'], rightPaddle: ['#ffeb3b', '#fbc02d'] }
+                };
+                return themes[theme] || themes.classic;
+            }
+            
+            drawThemedBackground(theme, themeColors) {
+                const time = Date.now() * 0.001;
+                switch(theme) {
+                    case 'classic':
+                        // Fundo clássico com gradiente sutil
+                        const classicGradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+                        classicGradient.addColorStop(0, '#1a1a1a');
+                        classicGradient.addColorStop(1, '#000000');
+                        this.ctx.fillStyle = classicGradient;
+                        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                        
+                        // Linhas sutis
+                        this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+                        this.ctx.lineWidth = 1;
+                        for (let i = 0; i < 10; i++) {
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(0, i * 60);
+                            this.ctx.lineTo(this.canvas.width, i * 60);
+                            this.ctx.stroke();
+                        }
+                        break;
+                        
+                    case 'neon':
+                        // Fundo neon com ondas animadas
+                        const neonGradient = this.ctx.createRadialGradient(
+                            this.canvas.width/2, this.canvas.height/2, 0,
+                            this.canvas.width/2, this.canvas.height/2, Math.max(this.canvas.width, this.canvas.height)
+                        );
+                        neonGradient.addColorStop(0, '#0a0a0a');
+                        neonGradient.addColorStop(0.5, '#1a0033');
+                        neonGradient.addColorStop(1, '#000000');
+                        this.ctx.fillStyle = neonGradient;
+                        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                        
+                        // Ondas neon animadas
+                        this.ctx.strokeStyle = 'rgba(0, 255, 255, 0.3)';
+                        this.ctx.lineWidth = 2;
+                        this.ctx.beginPath();
+                        for (let x = 0; x < this.canvas.width; x += 5) {
+                            const y = this.canvas.height/2 + Math.sin((x * 0.01) + time) * 50;
+                            if (x === 0) this.ctx.moveTo(x, y);
+                            else this.ctx.lineTo(x, y);
+                        }
+                        this.ctx.stroke();
+                        
+                        // Pontos brilhantes
+                        this.ctx.fillStyle = 'rgba(255, 0, 255, 0.4)';
+                        for (let i = 0; i < 20; i++) {
+                            const x = (i * 40 + time * 20) % this.canvas.width;
+                            const y = (Math.sin(time + i) * 100) + this.canvas.height/2;
+                            this.ctx.beginPath();
+                            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+                            this.ctx.fill();
+                        }
+                        break;
+                        
+                    case 'retro':
+                        // Fundo retro com padrão geométrico
+                        const retroGradient = this.ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
+                        retroGradient.addColorStop(0, '#2d1b69');
+                        retroGradient.addColorStop(0.5, '#11998e');
+                        retroGradient.addColorStop(1, '#2d1b69');
+                        this.ctx.fillStyle = retroGradient;
+                        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                        
+                        // Formas geométricas animadas
+                        this.ctx.strokeStyle = 'rgba(255, 107, 107, 0.4)';
+                        this.ctx.lineWidth = 3;
+                        for (let i = 0; i < 5; i++) {
+                            const x = (i * 160 + time * 30) % this.canvas.width;
+                            const y = (Math.sin(time + i) * 50) + this.canvas.height/2;
+                            this.ctx.strokeRect(x - 20, y - 20, 40, 40);
+                        }
+                        
+                        // Círculos retro
+                        this.ctx.strokeStyle = 'rgba(78, 205, 196, 0.3)';
+                        this.ctx.lineWidth = 2;
+                        for (let i = 0; i < 8; i++) {
+                            const x = (i * 100 + time * 15) % this.canvas.width;
+                            const y = (Math.cos(time + i) * 80) + this.canvas.height/2;
+                            this.ctx.beginPath();
+                            this.ctx.arc(x, y, 15, 0, Math.PI * 2);
+                            this.ctx.stroke();
+                        }
+                        break;
+                        
+                    case 'space':
+                        // Fundo espacial com estrelas
+                        const spaceGradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+                        spaceGradient.addColorStop(0, '#000428');
+                        spaceGradient.addColorStop(0.5, '#004e92');
+                        spaceGradient.addColorStop(1, '#000428');
+                        this.ctx.fillStyle = spaceGradient;
+                        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                        
+                        // Estrelas piscando
+                        this.ctx.fillStyle = '#ffffff';
+                        for (let i = 0; i < 100; i++) {
+                            const x = (i * 37 + 23) % this.canvas.width;
+                            const y = (i * 43 + 17) % this.canvas.height;
+                            const brightness = (Math.sin(time * 2 + i) + 1) / 2;
+                            
+                            this.ctx.globalAlpha = brightness * 0.8;
+                            this.ctx.beginPath();
+                            this.ctx.arc(x, y, 1, 0, Math.PI * 2);
+                            this.ctx.fill();
+                        }
+                        this.ctx.globalAlpha = 1;
+                        
+                        // Nebulosa
+                        this.ctx.fillStyle = 'rgba(255, 255, 0, 0.1)';
+                        this.ctx.beginPath();
+                        this.ctx.ellipse(
+                            this.canvas.width/2 + Math.sin(time * 0.5) * 50,
+                            this.canvas.height/2 + Math.cos(time * 0.3) * 30,
+                            150, 100, 0, 0, Math.PI * 2
+                        );
+                        this.ctx.fill();
+                        break;
+                        
+                    default:
+                        // Fallback para preto
+                        this.ctx.fillStyle = '#000000';
+                        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                }
             }
             
             render() {
-                // Limpar canvas
-                this.ctx.fillStyle = '#000';
-                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-                
-                // Desenhar linha central
-                this.ctx.strokeStyle = '#fff';
+                const theme = localStorage.getItem('theme') || 'classic';
+                const themeColors = this.getThemeColors(theme);
+                this.drawThemedBackground(theme, themeColors);
+                this.ctx.strokeStyle = themeColors.centerLine;
                 this.ctx.setLineDash([10, 10]);
                 this.ctx.beginPath();
                 this.ctx.moveTo(this.canvas.width / 2, 0);
@@ -561,28 +896,36 @@
                 this.ctx.stroke();
                 this.ctx.setLineDash([]);
                 
-                // Desenhar bola
-                this.ctx.fillStyle = '#fff';
+                const ballColor = this.gameState.difficulty === 'expert' ? themeColors.ball.expert : 
+                                 this.gameState.difficulty === 'difícil' ? themeColors.ball.hard :
+                                 this.gameState.difficulty === 'normal' ? themeColors.ball.normal : themeColors.ball.easy;
+                if (this.gameState.difficulty === 'expert' || this.gameState.difficulty === 'difícil') {
+                    this.ctx.shadowColor = ballColor;
+                    this.ctx.shadowBlur = 15;
+                }
+                this.ctx.fillStyle = ballColor;
                 this.ctx.beginPath();
                 this.ctx.arc(this.gameState.ball.x, this.gameState.ball.y, this.gameState.ball.radius, 0, Math.PI * 2);
                 this.ctx.fill();
+                this.ctx.shadowBlur = 0;
                 
-                // Desenhar raquetes
-                this.ctx.fillStyle = '#4CAF50';
-                this.ctx.fillRect(
-                    this.gameState.left_paddle.x, 
-                    this.gameState.left_paddle.y, 
-                    this.gameState.left_paddle.width, 
-                    this.gameState.left_paddle.height
-                );
+                const leftGradient = this.ctx.createLinearGradient(this.gameState.left_paddle.x, this.gameState.left_paddle.y, this.gameState.left_paddle.x + this.gameState.left_paddle.width, this.gameState.left_paddle.y + this.gameState.left_paddle.height);
+                leftGradient.addColorStop(0, themeColors.leftPaddle[0]);
+                leftGradient.addColorStop(1, themeColors.leftPaddle[1]);
+                this.ctx.fillStyle = leftGradient;
+                this.ctx.fillRect(this.gameState.left_paddle.x, this.gameState.left_paddle.y, this.gameState.left_paddle.width, this.gameState.left_paddle.height);
                 
-                this.ctx.fillStyle = '#f44336';
-                this.ctx.fillRect(
-                    this.gameState.right_paddle.x, 
-                    this.gameState.right_paddle.y, 
-                    this.gameState.right_paddle.width, 
-                    this.gameState.right_paddle.height
-                );
+                const rightGradient = this.ctx.createLinearGradient(this.gameState.right_paddle.x, this.gameState.right_paddle.y, this.gameState.right_paddle.x + this.gameState.right_paddle.width, this.gameState.right_paddle.y + this.gameState.right_paddle.height);
+                rightGradient.addColorStop(0, themeColors.rightPaddle[0]);
+                rightGradient.addColorStop(1, themeColors.rightPaddle[1]);
+                this.ctx.fillStyle = rightGradient;
+                this.ctx.fillRect(this.gameState.right_paddle.x, this.gameState.right_paddle.y, this.gameState.right_paddle.width, this.gameState.right_paddle.height);
+                
+                this.ctx.shadowColor = this.gameState.difficulty === 'expert' ? '#ff1744' : this.gameState.difficulty === 'difícil' ? '#ff5722' : this.gameState.difficulty === 'normal' ? '#ffc107' : '#4caf50';
+                this.ctx.shadowBlur = 10;
+                this.ctx.fillRect(this.gameState.left_paddle.x, this.gameState.left_paddle.y, this.gameState.left_paddle.width, this.gameState.left_paddle.height);
+                this.ctx.fillRect(this.gameState.right_paddle.x, this.gameState.right_paddle.y, this.gameState.right_paddle.width, this.gameState.right_paddle.height);
+                this.ctx.shadowBlur = 0;
             }
             
             async endGame() {
@@ -592,45 +935,21 @@
                 const playerName = localStorage.getItem('playerName');
                 let result = '';
                 
-                if (this.gameState.winner === 'player') {
-                    result = '🎉 Vitória!';
-                } else if (this.gameState.winner === 'bot') {
-                    result = '😞 Derrota!';
-                } else {
-                    result = '🤝 Empate!';
-                }
+                if (this.gameState.winner === 'player') result = '🎉 Vitória!';
+                else if (this.gameState.winner === 'bot') result = '😞 Derrota!';
+                else result = '🤝 Empate!';
                 
-                // Salvar resultado
-                try {
-                    await fetch('/api/end-game/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            player_name: playerName
-                        })
-                    });
-                } catch (error) {
-                    console.error('Erro ao salvar resultado:', error);
-                }
+                try { await fetch('/api/end-game/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ player_name: playerName }) }); } catch (error) { console.error('Erro ao salvar resultado:', error); }
                 
-                // Mostrar resultado
                 document.getElementById('game-overlay').classList.remove('hidden');
                 document.getElementById('overlay-title').textContent = result;
-                document.getElementById('overlay-message').textContent = 
-                    `Placar final: ${this.gameState.player_score} x ${this.gameState.bot_score}`;
+                document.getElementById('overlay-message').textContent = `Placar final: ${this.gameState.player_score} x ${this.gameState.bot_score}`;
                 document.getElementById('start-btn').textContent = '🔄 Jogar Novamente';
-                document.getElementById('start-btn').onclick = () => {
-                    window.location.href = "{% url 'index' %}";
-                };
+                document.getElementById('start-btn').onclick = () => { window.location.href = "{% url 'index' %}"; };
             }
         }
         
-        // Inicializar jogo quando a página carregar
-        document.addEventListener('DOMContentLoaded', () => {
-            new GameClient();
-        });
+        document.addEventListener('DOMContentLoaded', () => { new GameClient(); });
     </script>
 </body>
 </html>
