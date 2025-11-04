@@ -22,6 +22,9 @@ class Ball:
         """
         self.__x = x
         self.__y = y
+        # posição anterior para detecção contínua de colisão (swept)
+        self.__prev_x = x
+        self.__prev_y = y
         self.__radius = radius
         self.__speed = initial_speed
         self.__initial_speed = initial_speed
@@ -64,12 +67,25 @@ class Ball:
     
     def move(self):
         """Move a bola baseado na velocidade atual"""
+        # armazena posição anterior antes de mover
+        self.__prev_x = self.__x
+        self.__prev_y = self.__y
         self.__x += self.__dx
         self.__y += self.__dy
     
     def bounce_x(self):
         """Inverte a direção horizontal da bola"""
         self.__dx = -self.__dx
+    
+    def force_direction_right(self):
+        """Força a direção horizontal para a direita (positiva)"""
+        if self.__dx < 0:
+            self.__dx = -self.__dx
+    
+    def force_direction_left(self):
+        """Força a direção horizontal para a esquerda (negativa)"""
+        if self.__dx > 0:
+            self.__dx = -self.__dx
     
     def bounce_y(self):
         """Inverte a direção vertical da bola"""
@@ -134,6 +150,8 @@ class Ball:
         """
         self.__x = x
         self.__y = y
+        self.__prev_x = x
+        self.__prev_y = y
         self.__speed = self.__initial_speed
         self.__angle = random.uniform(-self.__initial_angle_range, self.__initial_angle_range)
         # Sorteia direção horizontal inicial para evitar previsibilidade
@@ -147,3 +165,12 @@ class Ball:
         """Retorna as coordenadas do retângulo da bola para colisão"""
         return (self.__x - self.__radius, self.__y - self.__radius, 
                 self.__radius * 2, self.__radius * 2)
+
+    # --- propriedades apenas leitura das posições anteriores ---
+    @property
+    def prev_x(self) -> int:
+        return self.__prev_x
+
+    @property
+    def prev_y(self) -> int:
+        return self.__prev_y

@@ -7,6 +7,7 @@ import pygame
 import sys
 from typing import Optional, Callable
 from score_manager import ScoreManager
+from player_registry import PlayerRegistry
 from responsive_utils import ResponsiveManager
 
 class Menu:
@@ -66,6 +67,13 @@ class Menu:
         
         # Gerenciador de pontuação
         self.__score_manager = ScoreManager()
+        
+        # Gerenciador de registro de jogadores
+        self.__player_registry = PlayerRegistry()
+        
+        # Estado para mensagens de boas-vindas/estatísticas
+        self.__is_new_player = False
+        self.__player_stats_message = ""
         
         # Callback para iniciar o jogo
         self.__start_game_callback: Optional[Callable[[str, str], None]] = None
@@ -284,11 +292,23 @@ class Menu:
         
         # Título da seção
         title_text = self.__font_large.render("Digite seu nome:", True, self.__WHITE)
-        title_rect = title_text.get_rect(center=(self.__width // 2, 250))
+        title_rect = title_text.get_rect(center=(self.__width // 2, 220))
         self.__screen.blit(title_text, title_rect)
         
+        # Mensagem de boas-vindas ou estatísticas
+        if self.__player_stats_message:
+            y_offset = 260
+            stats_lines = self.__player_stats_message.split('\n')
+            for i, line in enumerate(stats_lines):
+                if line.strip():
+                    color = self.__GREEN if self.__is_new_player else self.__LIGHT_BLUE
+                    stats_text = self.__font_small.render(line, True, color)
+                    stats_rect = stats_text.get_rect(center=(self.__width // 2, y_offset + i * 20))
+                    self.__screen.blit(stats_text, stats_rect)
+        
         # Campo de entrada
-        input_rect = pygame.Rect(self.__width // 2 - 150, 300, 300, 50)
+        input_y = 320 if self.__player_stats_message else 300
+        input_rect = pygame.Rect(self.__width // 2 - 150, input_y, 300, 50)
         color = self.__LIGHT_BLUE if self.__input_active else self.__GRAY
         pygame.draw.rect(self.__screen, color, input_rect)
         pygame.draw.rect(self.__screen, self.__WHITE, input_rect, 3)
@@ -305,7 +325,8 @@ class Menu:
             pygame.draw.rect(self.__screen, self.__BLACK, cursor_rect)
         
         # Botão Confirmar
-        confirm_rect = pygame.Rect(self.__width // 2 - 100, 380, 200, 50)
+        confirm_y = input_y + 80
+        confirm_rect = pygame.Rect(self.__width // 2 - 100, confirm_y, 200, 50)
         pygame.draw.rect(self.__screen, self.__GREEN, confirm_rect)
         pygame.draw.rect(self.__screen, self.__WHITE, confirm_rect, 3)
         
@@ -314,13 +335,14 @@ class Menu:
         self.__screen.blit(confirm_text, confirm_text_rect)
         
         # Instruções
+        instructions_y = confirm_y + 70
         instructions = [
             "Digite seu nome e pressione ENTER ou clique em CONFIRMAR",
             "Pressione ESC para voltar ao menu"
         ]
         for i, instruction in enumerate(instructions):
             text = self.__font_small.render(instruction, True, self.__GRAY)
-            text_rect = text.get_rect(center=(self.__width // 2, 450 + i * 25))
+            text_rect = text.get_rect(center=(self.__width // 2, instructions_y + i * 25))
             self.__screen.blit(text, text_rect)
     
     def __draw_ranking(self):
@@ -329,27 +351,74 @@ class Menu:
         
         # Título da seção
         title_text = self.__font_large.render("🏆 RANKING TOP 10 🏆", True, self.__GOLD)
-        title_rect = title_text.get_rect(center=(self.__width // 2, 200))
+        title_rect = title_text.get_rect(center=(self.__width // 2, 150))
         self.__screen.blit(title_text, title_rect)
+        
+        # Cabeçalho do ranking
+        header_y = 200
+        header_texts = ["Pos", "Nome", "Melhor Score", "Jogos", "Vitórias"]
+        header_x_positions = [
+            self.__width // 2 - 300,
+            self.__width // 2 - 150,
+            self.__width // 2,
+            self.__width // 2 + 120,
+            self.__width // 2 + 220
+        ]
+        
+        for i, (header_text, x_pos) in enumerate(zip(header_texts, header_x_positions)):
+            header = self.__font_small.render(header_text, True, self.__GOLD)
+            header_rect = header.get_rect(center=(x_pos, header_y))
+            self.__screen.blit(header, header_rect)
+        
+        # Linha separadora
+        pygame.draw.line(self.__screen, self.__GOLD, 
+                        (self.__width // 2 - 350, header_y + 20), 
+                        (self.__width // 2 + 350, header_y + 20), 2)
         
         # Ranking
         ranking = self.__score_manager.get_ranking()
         if ranking:
+            start_y = header_y + 40
             for i, entry in enumerate(ranking):
-                y_pos = 250 + i * 30
-                medal = "🥇" if i == 0 else "🥈" if i == 1 else "🥉" if i == 2 else f"{i+1}º"
+                y_pos = start_y + i * 35
                 
-                rank_text = f"{medal} {entry['name']}: {entry['score']} pontos"
-                text = self.__font_medium.render(rank_text, True, self.__WHITE)
-                text_rect = text.get_rect(center=(self.__width // 2, y_pos))
-                self.__screen.blit(text, text_rect)
+                # Posição com medalha
+                medal = "🥇" if i == 0 else "🥈" if i == 1 else "🥉" if i == 2 else f"{i+1}º"
+                pos_text = self.__font_small.render(medal, True, self.__WHITE)
+                pos_rect = pos_text.get_rect(center=(header_x_positions[0], y_pos))
+                self.__screen.blit(pos_text, pos_rect)
+                
+                # Nome
+                name = entry.get("name", "Unknown")
+                name_text = self.__font_small.render(name, True, self.__WHITE)
+                name_rect = name_text.get_rect(center=(header_x_positions[1], y_pos))
+                self.__screen.blit(name_text, name_rect)
+                
+                # Melhor Score
+                best_score = entry.get("best_score", entry.get("score", 0))
+                score_text = self.__font_small.render(str(best_score), True, self.__GREEN)
+                score_rect = score_text.get_rect(center=(header_x_positions[2], y_pos))
+                self.__screen.blit(score_text, score_rect)
+                
+                # Total de Jogos
+                total_games = entry.get("total_games", 0)
+                games_text = self.__font_small.render(str(total_games), True, self.__LIGHT_BLUE)
+                games_rect = games_text.get_rect(center=(header_x_positions[3], y_pos))
+                self.__screen.blit(games_text, games_rect)
+                
+                # Vitórias
+                total_wins = entry.get("total_wins", 0)
+                wins_text = self.__font_small.render(str(total_wins), True, self.__GREEN)
+                wins_rect = wins_text.get_rect(center=(header_x_positions[4], y_pos))
+                self.__screen.blit(wins_text, wins_rect)
         else:
             no_scores_text = self.__font_medium.render("Nenhuma pontuação registrada ainda!", True, self.__GRAY)
             no_scores_rect = no_scores_text.get_rect(center=(self.__width // 2, 300))
             self.__screen.blit(no_scores_text, no_scores_rect)
         
         # Botão Voltar
-        back_rect = pygame.Rect(self.__width // 2 - 100, 500, 200, 50)
+        back_y = min(500, start_y + len(ranking) * 35 + 30) if ranking else 500
+        back_rect = pygame.Rect(self.__width // 2 - 100, back_y, 200, 50)
         pygame.draw.rect(self.__screen, self.__BLUE, back_rect)
         pygame.draw.rect(self.__screen, self.__WHITE, back_rect, 3)
         
@@ -371,6 +440,9 @@ class Menu:
             200 <= y <= 200 + button_height):
             self.__current_screen = "name_input"
             self.__input_active = True
+            self.__player_stats_message = ""  # Limpa mensagem ao entrar na tela
+            if self.__player_name.strip():
+                self.__check_player_exists()  # Verifica se já tem nome digitado
         
         # Botão Dificuldade
         elif (button_x <= x <= button_x + button_width and 
@@ -452,10 +524,37 @@ class Menu:
         
         return True
     
+    def __check_player_exists(self):
+        """Verifica se o jogador existe e atualiza mensagem"""
+        name = self.__player_name.strip()
+        if name:
+            if self.__player_registry.player_exists(name):
+                # Jogador existente - mostra estatísticas
+                stats = self.__player_registry.get_player_stats(name)
+                if stats:
+                    self.__is_new_player = False
+                    total_games = stats.get("total_games", 0)
+                    total_wins = stats.get("total_wins", 0)
+                    best_score = stats.get("best_score", 0)
+                    win_rate = (total_wins / total_games * 100) if total_games > 0 else 0
+                    self.__player_stats_message = f"Bem-vindo de volta, {name}!\n" \
+                                                f"Melhor Score: {best_score} | Jogos: {total_games} | " \
+                                                f"Vitórias: {total_wins} ({win_rate:.0f}%)"
+            else:
+                # Novo jogador
+                self.__is_new_player = True
+                self.__player_stats_message = f"Novo jogador! Bem-vindo, {name}!"
+        else:
+            self.__player_stats_message = ""
+    
     def __start_game(self):
         """Inicia o jogo com o nome do jogador e dificuldade"""
         if self.__start_game_callback and self.__player_name.strip():
-            self.__start_game_callback(self.__player_name.strip(), self.__selected_difficulty)
+            name = self.__player_name.strip()
+            # Registra jogador se não existir
+            if not self.__player_registry.player_exists(name):
+                self.__player_registry.register_player(name)
+            self.__start_game_callback(name, self.__selected_difficulty)
     
     def __toggle_fullscreen(self):
         """Alterna entre tela cheia e modo janela"""
@@ -476,11 +575,13 @@ class Menu:
         if self.__current_screen == "name_input" and self.__input_active:
             if event.key == pygame.K_BACKSPACE:
                 self.__player_name = self.__player_name[:-1]
+                self.__check_player_exists()
             elif event.key == pygame.K_RETURN:
                 if self.__player_name.strip():
                     self.__start_game()
             elif event.unicode.isprintable() and len(self.__player_name) < 20:
                 self.__player_name += event.unicode
+                self.__check_player_exists()
         elif self.__current_screen == "difficulty":
             if event.key == pygame.K_UP:
                 self.__difficulty_index = (self.__difficulty_index - 1) % len(self.__difficulties)

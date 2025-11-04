@@ -282,6 +282,8 @@ class Game:
         ball_x = self.__ball.x
         ball_y = self.__ball.y
         ball_radius = self.__ball.radius
+        prev_x = self.__ball.prev_x
+        prev_y = self.__ball.prev_y
         
         # Debug: mostra posição da bola
         if ball_x < 0 or ball_x > self.__width:
@@ -295,24 +297,72 @@ class Game:
             self.__ball.bounce_y()
             self.__ball.y = self.__height - ball_radius - 1
         
-        # Colisões com raquetes
-        left_paddle = self.__left_paddle
-        if (ball_x - ball_radius <= left_paddle.x + left_paddle.width and
-            ball_x + ball_radius >= left_paddle.x and
-            ball_y + ball_radius >= left_paddle.y and
-            ball_y - ball_radius <= left_paddle.y + left_paddle.height and
-            self.__ball.x < left_paddle.x + left_paddle.width):
-            self.__ball.bounce_paddle(left_paddle.y, left_paddle.height)
-            self.__ball.x = left_paddle.x + left_paddle.width + ball_radius + 2
+        # Colisões com raquetes - Abordagem simplificada e robusta
+        epsilon = 5.0  # Espaço garantido entre bola e raquete
         
+        # --- Raquete esquerda ---
+        left_paddle = self.__left_paddle
+        left_edge_right = left_paddle.x + left_paddle.width
+        
+        # Verifica sobreposição Y
+        overlaps_y_left = (ball_y + ball_radius >= left_paddle.y and 
+                          ball_y - ball_radius <= left_paddle.y + left_paddle.height)
+        
+        # ANTI-STUCK: Se a bola está atrás ou muito próxima da raquete esquerda
+        # Verifica também se estava se movendo em direção à raquete (vindo do centro)
+        if ball_x < left_edge_right + epsilon and overlaps_y_left:
+            # Verifica se a bola acabou de ser resetada (prev_x == ball_x) ou está muito próxima
+            is_recently_reset = (abs(prev_x - ball_x) < 1.0)
+            # Se foi resetada recentemente ou está atrás da raquete, corrige
+            if is_recently_reset or ball_x < left_edge_right:
+                # Reposiciona a bola para a frente da raquete
+                self.__ball.x = left_edge_right + ball_radius + epsilon
+                # Aplica bounce_paddle que recalcula a direção
+                self.__ball.bounce_paddle(left_paddle.y, left_paddle.height)
+                # FORÇA direção para DIREITA (sempre afasta da raquete esquerda)
+                self.__ball.force_direction_right()
+                # Garante que a posição não está atrás
+                if self.__ball.x < left_edge_right:
+                    self.__ball.x = left_edge_right + ball_radius + epsilon
+        
+        # Colisão normal - bola está na frente ou colidindo com a face da raquete
+        elif overlaps_y_left and ball_x >= left_paddle.x and ball_x <= left_edge_right + ball_radius * 2:
+            # Colisão detectada - aplica rebote
+            self.__ball.bounce_paddle(left_paddle.y, left_paddle.height)
+            # Garante posição correta
+            self.__ball.x = left_edge_right + ball_radius + epsilon
+
+        # --- Raquete direita ---
         right_paddle = self.__right_paddle
-        if (ball_x + ball_radius >= right_paddle.x and
-            ball_x - ball_radius <= right_paddle.x + right_paddle.width and
-            ball_y + ball_radius >= right_paddle.y and
-            ball_y - ball_radius <= right_paddle.y + right_paddle.height and
-            self.__ball.x > right_paddle.x):
+        right_edge_left = right_paddle.x
+        
+        # Verifica sobreposição Y
+        overlaps_y_right = (ball_y + ball_radius >= right_paddle.y and 
+                           ball_y - ball_radius <= right_paddle.y + right_paddle.height)
+        
+        # ANTI-STUCK: Se a bola está atrás ou muito próxima da raquete direita
+        # Verifica também se estava se movendo em direção à raquete (vindo do centro)
+        if ball_x > right_edge_left - epsilon and overlaps_y_right:
+            # Verifica se a bola acabou de ser resetada (prev_x == ball_x) ou está muito próxima
+            is_recently_reset = (abs(prev_x - ball_x) < 1.0)
+            # Se foi resetada recentemente ou está atrás da raquete, corrige
+            if is_recently_reset or ball_x > right_edge_left:
+                # Reposiciona a bola para a frente da raquete
+                self.__ball.x = right_edge_left - ball_radius - epsilon
+                # Aplica bounce_paddle que recalcula a direção
+                self.__ball.bounce_paddle(right_paddle.y, right_paddle.height)
+                # FORÇA direção para ESQUERDA (sempre afasta da raquete direita)
+                self.__ball.force_direction_left()
+                # Garante que a posição não está atrás
+                if self.__ball.x > right_edge_left:
+                    self.__ball.x = right_edge_left - ball_radius - epsilon
+        
+        # Colisão normal - bola está na frente ou colidindo com a face da raquete
+        elif overlaps_y_right and ball_x <= right_paddle.x + right_paddle.width and ball_x >= right_edge_left - ball_radius * 2:
+            # Colisão detectada - aplica rebote
             self.__ball.bounce_paddle(right_paddle.y, right_paddle.height)
-            self.__ball.x = right_paddle.x - ball_radius - 2
+            # Garante posição correta
+            self.__ball.x = right_edge_left - ball_radius - epsilon
         
         # Colisões com obstáculos
         if self.__obstacles:
@@ -331,8 +381,9 @@ class Game:
         # Verifica se alguém ganhou (3 pontos)
         if self.__player.score >= 3 or self.__bot.score >= 3:
             winner = "Jogador" if self.__player.score >= 3 else "Bot"
+            player_won = (winner == "Jogador")
             print(f"{winner} ganhou o jogo! Placar final: {self.__player.score} x {self.__bot.score}")
-            self.__score_manager.add_score(self.__player.name, self.__player.score)
+            self.__score_manager.add_score(self.__player.name, self.__player.score, won=player_won)
             self.__game_running = False
             self.__show_game_over_screen(winner)
         
@@ -342,13 +393,16 @@ class Game:
         if elapsed_time >= self.__game_duration:
             if self.__player.score > self.__bot.score:
                 winner = "Jogador"
+                player_won = True
             elif self.__bot.score > self.__player.score:
                 winner = "Bot"
+                player_won = False
             else:
                 winner = "Empate"
+                player_won = False
             
             print(f"Tempo esgotado! {winner} ganhou! Placar final: {self.__player.score} x {self.__bot.score}")
-            self.__score_manager.add_score(self.__player.name, self.__player.score)
+            self.__score_manager.add_score(self.__player.name, self.__player.score, won=player_won)
             self.__game_running = False
             self.__show_game_over_screen(winner)
     
