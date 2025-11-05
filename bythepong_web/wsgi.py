@@ -8,9 +8,15 @@ https://docs.djangoproject.com/en/5.2/howto/deployment/wsgi/
 """
 
 import os
-
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bythepong_web.settings')
+# Use production settings on Vercel
+if os.environ.get('VERCEL'):
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bythepong_web.settings_production')
+else:
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bythepong_web.settings')
 
 application = get_wsgi_application()
+
+# Vercel requires 'app' variable
+app = application
