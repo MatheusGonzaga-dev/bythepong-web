@@ -10,9 +10,9 @@ https://docs.djangoproject.com/en/5.2/howto/deployment/wsgi/
 import os
 from django.core.wsgi import get_wsgi_application
 
-# Use production settings on Vercel
+# Use settings_vercel on Vercel (sem banco de dados)
 if os.environ.get('VERCEL'):
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bythepong_web.settings_production')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bythepong_web.settings_vercel')
 else:
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bythepong_web.settings')
 

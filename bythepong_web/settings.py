@@ -110,6 +110,4 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Production settings override for Vercel
-if os.environ.get('VERCEL'):
-    from .settings_production import *
+# Vercel usa settings_vercel (sem banco de dados)
