@@ -939,7 +939,25 @@
                 else if (this.gameState.winner === 'bot') result = '😞 Derrota!';
                 else result = '🤝 Empate!';
                 
-                try { await fetch('/api/end-game/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ player_name: playerName }) }); } catch (error) { console.error('Erro ao salvar resultado:', error); }
+                // Salvar resultado no servidor
+                try {
+                    console.log('💾 Salvando resultado da partida...');
+                    const response = await fetch('/api/end-game/', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ player_name: playerName })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        console.log('✅ Partida salva com sucesso!', data);
+                    } else {
+                        console.warn('⚠️ Erro ao salvar partida:', data.error);
+                    }
+                } catch (error) {
+                    console.error('❌ Erro ao salvar resultado:', error);
+                }
                 
                 document.getElementById('game-overlay').classList.remove('hidden');
                 document.getElementById('overlay-title').textContent = result;

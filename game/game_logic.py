@@ -245,30 +245,50 @@ class Game:
     def __check_collisions(self):
         """Verifica colisões da bola"""
         # Colisão com paredes superior/inferior
-        if self.__ball.y <= 0 or self.__ball.y >= self.__height - self.__ball.radius:
+        if self.__ball.y - self.__ball.radius <= 0:
+            self.__ball.set_position(self.__ball.x, self.__ball.radius)
+            self.__ball.bounce_wall()
+        elif self.__ball.y + self.__ball.radius >= self.__height:
+            self.__ball.set_position(self.__ball.x, self.__height - self.__ball.radius)
             self.__ball.bounce_wall()
         
         # Colisão com raquete esquerda (jogador)
-        if (self.__ball.x <= self.__left_paddle.x + self.__left_paddle.width and
+        # Verifica se a bola está se movendo para a esquerda e na área da raquete
+        if (self.__ball.dx < 0 and  # Bola indo para a esquerda
+            self.__ball.x - self.__ball.radius <= self.__left_paddle.x + self.__left_paddle.width and
+            self.__ball.x - self.__ball.radius >= self.__left_paddle.x and
             self.__ball.y >= self.__left_paddle.y and
             self.__ball.y <= self.__left_paddle.y + self.__left_paddle.height):
+            # Reposiciona a bola para evitar que fique presa
+            self.__ball.set_position(
+                self.__left_paddle.x + self.__left_paddle.width + self.__ball.radius,
+                self.__ball.y
+            )
             self.__ball.bounce_paddle()
         
         # Colisão com raquete direita (bot)
-        if (self.__ball.x >= self.__right_paddle.x - self.__ball.radius and
+        # Verifica se a bola está se movendo para a direita e na área da raquete
+        if (self.__ball.dx > 0 and  # Bola indo para a direita
+            self.__ball.x + self.__ball.radius >= self.__right_paddle.x and
+            self.__ball.x + self.__ball.radius <= self.__right_paddle.x + self.__right_paddle.width and
             self.__ball.y >= self.__right_paddle.y and
             self.__ball.y <= self.__right_paddle.y + self.__right_paddle.height):
+            # Reposiciona a bola para evitar que fique presa
+            self.__ball.set_position(
+                self.__right_paddle.x - self.__ball.radius,
+                self.__ball.y
+            )
             self.__ball.bounce_paddle()
     
     def __check_scoring(self):
         """Verifica pontuação"""
         # Ponto do bot (bola passou pela esquerda)
-        if self.__ball.x <= 0:
+        if self.__ball.x - self.__ball.radius <= 0:
             self.__bot_score += 1
             self.__ball.reset(self.__width // 2, self.__height // 2)
         
         # Ponto do jogador (bola passou pela direita)
-        elif self.__ball.x >= self.__width:
+        elif self.__ball.x + self.__ball.radius >= self.__width:
             self.__player_score += 1
             self.__ball.reset(self.__width // 2, self.__height // 2)
     

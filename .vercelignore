@@ -1,61 +1,34 @@
-# Python
+# Não enviar para Vercel (otimiza deploy)
+.venv/
+venv/
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .Python
-
-# Virtual environments
-venv/
-env/
-.venv/
-
-# IDE
-.vscode/
-.idea/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Django
 db.sqlite3
-staticfiles/
-media/
-
-# Git
+*.log
 .git/
 .gitignore
-
-# Documentation
+.vscode/
+.idea/
 *.md
-
-# Batch files
-*.bat
-
-# Game files (não necessários para web)
+!README.md
+tests/
+docs/
+.cursor/
+executar_*.bat
+executar_*.py
 app.py
-game.py
 main.py
 menu.py
-ball.py
+game.py
 paddle.py
+ball.py
 player.py
+player_registry.py
 score_manager.py
 responsive_utils.py
 ranking.json
-executar_*.py
-executar_*.bat
-
-# Arquivos de configuração desnecessários
-bythepong_web/settings_production.py
-bythepong_web/settings_vercel.py
-game/views.py
-game/models.py
-game/game_logic.py
-game/simple_game.py
-game/views_simple.py
-game/migrations/
-
-# Build files
-build.sh
+RESUMO_POO.txt
+ARQUITETURA.md

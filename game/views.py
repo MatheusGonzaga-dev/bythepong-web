@@ -108,27 +108,83 @@ def end_game(request):
     """Finaliza o jogo e salva resultado"""
     global current_game
     
+    print(f"\n{'='*60}")
+    print(f"🎮 API END-GAME CHAMADA")
+    print(f"{'='*60}")
+    
     if not current_game:
+        print("❌ Erro: Nenhum jogo ativo")
         return JsonResponse({'error': 'Nenhum jogo ativo'}, status=400)
     
     try:
         data = json.loads(request.body)
         player_name = data.get('player_name', '').strip()
         
+        print(f"👤 Jogador: {player_name}")
+        
         if not player_name:
+            print("❌ Erro: Nome do jogador não fornecido")
             return JsonResponse({'error': 'Nome do jogador é obrigatório'}, status=400)
         
         # Determinar vencedor
         won = current_game.winner == 'player'
+        player_score = current_game.player_score
+        bot_score = current_game.bot_score
+        difficulty = current_game.difficulty
+        
+        print(f"📊 Placar: {player_score} x {bot_score}")
+        print(f"🏆 Resultado: {'VITÓRIA' if won else 'DERROTA' if current_game.winner == 'bot' else 'EMPATE'}")
+        print(f"⚙️  Dificuldade: {difficulty}")
+        print(f"💾 Banco disponível: {DB_AVAILABLE}")
+        
+        # Salvar no banco de dados se disponível
+        if DB_AVAILABLE:
+            try:
+                # Buscar ou criar jogador
+                player, created = Player.objects.get_or_create(
+                    name=player_name,
+                    defaults={'best_score': 0, 'total_games': 0, 'total_wins': 0}
+                )
+                
+                if created:
+                    print(f"✨ Novo jogador criado: {player_name}")
+                else:
+                    print(f"📝 Jogador existente: {player_name}")
+                
+                # Atualizar estatísticas do jogador
+                player.add_game_result(player_score, won)
+                print(f"📈 Estatísticas atualizadas - Total jogos: {player.total_games}, Vitórias: {player.total_wins}, Melhor: {player.best_score}")
+                
+                # Criar sessão de jogo
+                game_duration = 120 - current_game.get_remaining_time()
+                game_session = GameSession.objects.create(
+                    player=player,
+                    difficulty=difficulty,
+                    player_score=player_score,
+                    bot_score=bot_score,
+                    game_duration=game_duration,
+                    won=won
+                )
+                
+                print(f"✅ Sessão de jogo salva: ID {game_session.id}")
+                print(f"✅ Partida salva: {player_name} - {difficulty} - {player_score}x{bot_score} - {'Vitória' if won else 'Derrota'}")
+                print(f"{'='*60}\n")
+                
+            except Exception as db_error:
+                print(f"⚠️ Erro ao salvar no banco: {db_error}")
+                import traceback
+                print(traceback.format_exc())
+                # Continua mesmo com erro no banco
         
         result = {
             'success': True,
             'final_score': {
-                'player': current_game.player_score,
-                'bot': current_game.bot_score
+                'player': player_score,
+                'bot': bot_score
             },
             'winner': current_game.winner,
-            'won': won
+            'won': won,
+            'saved': DB_AVAILABLE
         }
         
         # Limpar jogo atual
