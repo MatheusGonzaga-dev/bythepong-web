@@ -1,13 +1,10 @@
 #!/bin/bash
-# Script para build na Vercel
+# Script de build para Vercel
 
-# Instalar dependências
+echo "🔨 Instalando dependências..."
 pip install -r requirements_web.txt
 
-# Executar migrações
-python manage.py migrate
+echo "📦 Coletando arquivos estáticos..."
+python manage.py collectstatic --noinput --clear
 
-# Coletar arquivos estáticos
-python manage.py collectstatic --noinput
-
-echo "Build concluído!"
+echo "✅ Build concluído!"
