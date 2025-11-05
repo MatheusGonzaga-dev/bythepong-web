@@ -61,9 +61,9 @@ DATABASES = {
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
+
+# Não incluir STATICFILES_DIRS se não existir
+# STATICFILES_DIRS = []
 
 # WhiteNoise configuration for static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -86,8 +86,14 @@ X_FRAME_OPTIONS = 'DENY'
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
 
-# Disable migrations for Vercel
-MIGRATION_MODULES = {}
+# Disable migrations for Vercel (evita erros com banco em memória)
+class DisableMigrations:
+    def __contains__(self, item):
+        return True
+    def __getitem__(self, item):
+        return None
+
+MIGRATION_MODULES = DisableMigrations()
 
 # Logging
 LOGGING = {
