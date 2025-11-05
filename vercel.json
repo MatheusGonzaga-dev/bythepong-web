@@ -1,14 +1,8 @@
 {
-  "builds": [
+  "rewrites": [
     {
-      "src": "bythepong_web/wsgi.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "bythepong_web/wsgi.py"
+      "source": "/(.*)",
+      "destination": "/bythepong_web/wsgi"
     }
   ]
 }
